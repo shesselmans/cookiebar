@@ -303,13 +303,14 @@
 			}
 		});
 	}
-	var PrivacyGenerator = function (host, version, modal) {
+	var PrivacyGenerator = function (host, version, modal, api_key) {
 		var that = this;
 		this.version = version;
 		this.hostName = host;
 		this.cookieName = "customConsent";
 		this.modal = modal;
 		this.defaultConsentedCategories = ["C0001","C0002"];
+		this.api_key = api_key || "";
 
 		// Button Event Handler
 		this.modal.querySelector("#accept").addEventListener("click", function () {
@@ -549,6 +550,7 @@
 		var endpoint = 'https://example.com/consent-hit';
 		try {
 			if (!payload.version) { payload.version = this.version; }
+			payload.api_key = this.api_key;
 			var body = JSON.stringify(payload);
 			if (navigator.sendBeacon) {
 				var blob = new Blob([body], { type: 'application/json' });
