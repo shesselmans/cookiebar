@@ -1,0 +1,578 @@
+<style>
+	/* The Modal (background) */
+	h2 {
+		margin: 10px 0;
+		color: #2196F3;
+	}
+
+	.modal {
+		display: none;
+		position: fixed;
+		z-index: 999;
+		left: 0;
+		top: 0;
+		width: 100%;
+		/* Full width */
+		height: 100%;
+		/* Full height */
+		overflow: auto;
+		/* Enable scroll if needed */
+		background-color: rgb(0, 0, 0);
+		/* Fallback color */
+		background-color: rgba(0, 0, 0, 0.4);
+		/* Black w/ opacity */
+	}
+
+	/* Modal Content/Box */
+	.modal-content {
+		background-color: #fefefe;
+		margin: 5% auto;
+		padding: 20px;
+		border: 1px solid #888;
+		max-width: 600px;
+		font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+		color: #333;
+		/* Could be more or less, depending on screen size */
+	}
+
+	/* The Close Button */
+	.close {
+		color: #aaa;
+		float: right;
+		font-size: 28px;
+		font-weight: bold;
+	}
+
+	.close:hover,
+	.close:focus {
+		color: black;
+		text-decoration: none;
+		cursor: pointer;
+	}
+
+	/* Style the buttons that are used to open and close the accordion panel */
+	.accordion {
+		background-color: #eee;
+		color: #444;
+		cursor: pointer;
+		padding: 10px;
+		width: 100%;
+		text-align: left;
+		/* border: 1px solid #bbb; */
+		border: none;
+		outline: none;
+		transition: 0.4s;
+		font-size: 14px;
+		line-height: 24px;
+	}
+
+	.active,
+	.accordion:hover {
+		background-color: #ddd;
+	}
+
+	.panel {
+		padding: 0 18px;
+		background-color: white;
+		max-height: 0;
+		overflow: hidden;
+		transition: max-height 0.2s ease-out;
+		border: 1px solid #bbbb;
+	}
+
+	.accordion:after {
+		content: '\02795';
+		/* Unicode character for "plus" sign (+) */
+		font-size: 13px;
+		color: #777;
+		float: right;
+		margin-left: 5px;
+	}
+
+	.active:after {
+		content: "\2796";
+		/* Unicode character for "minus" sign (-) */
+	}
+
+	/* Toggle switch */
+	/* The switch - the box around the slider */
+	.switch {
+		position: absolute;
+		/* display: inline-block; */
+		width: 40px;
+		height: 20px;
+		margin: 2px 10px;
+	}
+
+	/* Hide default HTML checkbox */
+	.switch input {
+		opacity: 0;
+		width: 0;
+		height: 0;
+	}
+
+	/* The slider */
+	.slider {
+		position: absolute;
+		cursor: pointer;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background-color: #ccc;
+		-webkit-transition: .4s;
+		transition: .4s;
+	}
+
+	.slider:before {
+		position: absolute;
+		content: "";
+		height: 15px;
+		width: 15px;
+		left: 4px;
+		bottom: 2px;
+		background-color: white;
+		-webkit-transition: .4s;
+		transition: .4s;
+	}
+
+	input:checked+.slider {
+		background-color: #2196F3;
+	}
+
+	input:focus+.slider {
+		box-shadow: 0 0 1px #2196F3;
+	}
+
+	input:checked+.slider:before {
+		-webkit-transform: translateX(16px);
+		-ms-transform: translateX(16px);
+		transform: translateX(16px);
+	}
+
+	/* Rounded sliders */
+	.slider.round {
+		border-radius: 34px;
+	}
+
+	.slider.round:before {
+		border-radius: 50%;
+	}
+
+	div.cookie_buttons {
+		width: 100%;
+		display: block;
+		padding: 10px 0;
+		text-align: center;
+	}
+
+	div.cookie_buttons button {
+		display: inline-block;
+		width: 160px;
+		height: 50px;
+		margin: 5px;
+		padding: 0 !important;
+		text-align: center;
+		border: none;
+	}
+
+	div.cookie_buttons button#accept {
+		background-color: #2196F3;
+		color: #fff;
+		cursor: pointer;
+	}
+
+	div.cookie_buttons button#deny {
+		background-color: #2196F3;
+		color: #fff;
+		cursor: pointer;
+	}
+
+	div.cookie_buttons button#save-settings {
+		background-color: #2196F3;
+		color: #fff;
+		cursor: pointer;
+	}
+</style>
+<html>
+<!-- The Modal -->
+<div id="myModal" class="modal">
+	<!-- Modal content -->
+	<div class="modal-content">
+		<span class="close">&times;</span>
+		<div class="modalcontent">
+			<h2>Cookie voorkeuren</h2>
+			<p>Deze website maakt gebruik van cookies. Hierin wordt informatie opgeslagen, meestal bedoeld om de website beter te laten werken. De informatie identificeert u normaal gesproken niet direct, maar kan u een beter op uw voorkeuren toegesneden surfervaring geven. Omdat we uw recht op privacy respecteren, kunt u er voor kiezen sommige soorten cookies te blokkeren.</p> 
+			<!-- Accordeon -->
+			<button class="accordion">Strikt noodzakelijke cookies
+			</button>
+			<div class="panel">
+				<p>Deze cookies zijn nodig anders werkt de website niet. Deze cookies kunnen niet worden uitgeschakeld. In de meeste gevallen worden deze cookies alleen gebruikt naar aanleiding van een handeling van u waarmee u in wezen een dienst aanvraagt, bijvoorbeeld uw privacyinstellingen registreren, in de website inloggen of een formulier invullen. U kunt uw browser instellen om deze cookies te blokkeren of om u voor deze cookies te waarschuwen, maar sommige delen van de website zullen dan niet werken. Deze cookies slaan geen persoonlijk identificeerbare informatie
+					op.</p>
+			</div>
+			<button class="accordion">Prestatie cookies
+			</button>
+			<div class="panel">
+				<p>Deze cookies stellen ons in staat bezoekers en hun herkomst te tellen zodat we de prestatie van onze website kunnen analyseren en verbeteren. Ze helpen ons te begrijpen welke pagina’s het meest en minst populair zijn en hoe bezoekers zich door de gehele site bewegen. Alle informatie die deze cookies verzamelen wordt geaggregeerd en is daarom anoniem. Als u deze cookies niet toestaat, weten wij niet wanneer u onze site heeft bezocht. <br><br> In het <a href="https://policies.google.com/technologies/partner-sites" rel="nofollow" tabindex="0">Privacybeleid en Servicevoorwaarden van Google</a> beschrijft Google hoe zij uw persoonsgegevens gebruiken.</p>
+			</div>
+			<button class="accordion">Voorkeur cookies
+				<!-- Rounded switch -->
+				<label class="switch" id="preferences-cookie">
+					<input type="checkbox">
+					<span class="slider round"></span>
+				</label>
+			</button>
+			<div class="panel">
+				<p>Deze cookies worden gebruikt om uw voorkeuren op te slaan. We gebruiken de cookies om de website beter te laten aansluiten aan uw voorkeuren.</p>
+			</div>
+			<button class="accordion">Marketing cookies
+				<!-- Rounded switch -->
+				<label class="switch" id="marketing-cookie">
+					<input type="checkbox">
+					<span class="slider round"></span>
+				</label>
+			</button>
+			<div class="panel">
+				<p>Deze cookies kunnen door onze adverteerders op onze website worden ingesteld. Ze worden wellicht door die bedrijven gebruikt om een profiel van uw interesses samen te stellen en u relevante advertenties op andere websites te tonen. Ze slaan geen directe persoonlijke informatie op, maar ze zijn gebaseerd op unieke identificatoren van uw browser en internetapparaat. Als u deze cookies niet toestaat, zult u minder op u gerichte advertenties zien.</p>
+			</div>
+			<div class="cookie_buttons">
+				<button id="accept">Alle cookies accepteren</button>
+				<button id="deny">Alle cookies weigeren</button>
+				<button id="save-settings">Aanpassingen opslaan</button>
+			</div>
+		</div>
+	</div>
+</div>
+</html>
+<script>
+	// Get the modal
+	var modal = document.getElementById("myModal");
+	var span = document.getElementsByClassName("close")[0];
+	span.onclick = function () {
+		modal.style.display = "none";
+	}
+	window.onclick = function (event) {
+		if (event.target == modal) {
+			modal.style.display = "none";
+		}
+	}
+
+	// Code accordeon
+	var acc = document.getElementsByClassName("accordion");
+	var i;
+	for (i = 0; i < acc.length; i++) {
+		acc[i].addEventListener("click", function () {
+			this.classList.toggle("active");
+			var panel = this.nextElementSibling;
+			if (panel.style.maxHeight) {
+				panel.style.maxHeight = null;
+			} else {
+				panel.style.maxHeight = panel.scrollHeight + "px";
+			}
+		});
+	}
+
+	// Code Afhandeling Cookie Voorkeuren
+	// Polyfill array.find
+	if (!Array.prototype.find) {
+		Object.defineProperty(Array.prototype, 'find', {
+			enumerable: false,
+			configurable: true,
+			writable: true,
+			value: function (predicate) {
+				if (this == null) {
+					throw new TypeError('Array.prototype.find called on null or undefined');
+				}
+				if (typeof predicate !== 'function') {
+					throw new TypeError('predicate must be a function');
+				}
+				var list = Object(this);
+				var length = list.length >>> 0;
+				var thisArg = arguments[1];
+				var value;
+
+				for (var i = 0; i < length; i++) {
+					if (i in list) {
+						value = list[i];
+						if (predicate.call(thisArg, value, i, list)) {
+							return value;
+						}
+					}
+				}
+				return undefined;
+			}
+		});
+	}
+	var PrivacyGenerator = function (host, version, modal) {
+		var that = this;
+		this.version = version;
+		this.hostName = host;
+		this.cookieName = "customConsent";
+		this.modal = modal;
+		this.defaultConsentedCategories = ["C0001","C0002"];
+
+		// Button Event Handler
+		this.modal.querySelector("#accept").addEventListener("click", function () {
+			that.acceptCategory("C0001:C0002:C0003:C0004"); // example group codes
+		});
+
+		this.modal.querySelector("#deny").addEventListener("click", function () {
+			that.acceptCategory("C0001:C0002"); // only strictly necessary and stats cookies
+		});
+
+		this.modal.querySelector("#save-settings").addEventListener("click", function () {
+			var groups = ["C0001","C0002"]; // always include strictly necessary
+			var switches = document.querySelectorAll(".switch input");
+			if (switches[0].checked) groups.push("C0003"); // preferences
+			if (switches[1].checked) groups.push("C0004"); // marketing
+			that.acceptCategory(groups.join(":"));
+			modal.style.display = "none";
+		});
+
+		//check freshness version
+		var cookieContent = this.loadCookie(this.cookieName);
+		var settings = this.cookieParams(cookieContent);
+
+
+		if (settings.length > 0 && settings[0] !== "") {
+			var cookieValid = settings.find(function (val) {
+				return val == ("version=" + version)
+			});
+			if (typeof cookieValid == "undefined") {
+				console.log("Wrong version CMP");
+				that.removeCookie(that.cookieName, that.hostName);
+			} else {
+				console.log("Correct version CMP");
+				that.refreshCookie(that.cookieName, 700);
+				that.ensureUserIdInCookie();
+			}
+		} else {
+			this.modal.style.display = "block";
+		}
+
+		this.sendDataLayerEvent();
+
+		var currentCategories = this.getCategories();
+		// if (currentCategories.length == 0) {
+		// 	this.modal.style.display = "block";
+		// }
+		this.updateModalSettings(this.modal);
+
+
+	};
+	PrivacyGenerator.prototype.loadCookie = function (cookieName) {
+		var cookieContent = document.cookie.split('; ').find(function (val, ind) {
+			return val.startsWith(cookieName);
+		});
+		if (typeof cookieContent !== "undefined") {
+			cookieContent = decodeURIComponent(cookieContent);
+			cookieContent = cookieContent.replace(cookieName + "=", "");
+		}
+		return cookieContent;
+	};
+
+	PrivacyGenerator.prototype.removeCookie = function (cookieName, hostName) {
+		var cookieStr = cookieName + '=; path=/; domain=' + hostName + '; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+		document.cookie = cookieStr;
+		console.log("Cookie removed");
+		console.log(cookieStr);
+	};
+
+	PrivacyGenerator.prototype.addCookie = function (cookieName, hostName, cookieVal, exdays) {
+		var d = new Date();
+		d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+		var expires = d.toUTCString();
+		var cookieStr = cookieName + '=' + cookieVal + '; path=/; domain=' + hostName + '; expires=' + expires + ';';
+		document.cookie = cookieStr;
+		console.log("Cookie CMP added");
+		console.log(cookieStr);
+	};
+
+	PrivacyGenerator.prototype.refreshCookie = function (cookieName, days) {
+		var exdate = new Date();
+		var cookieContent = this.loadCookie(cookieName);
+		exdate.setDate(exdate.getDate() + days);
+		document.cookie = encodeURIComponent(cookieName)
+			+ "=" + encodeURIComponent(cookieContent)
+			+ "; domain=" + encodeURIComponent(this.hostName)
+			+ (!exdate ? "" : "; expires=" + exdate.toUTCString());
+	};
+
+	PrivacyGenerator.prototype.cookieParams = function (cookieVal) {
+		var settings;
+		if (typeof cookieVal !== "undefined") {
+			settings = decodeURIComponent(cookieVal).split("&");
+		} else {
+			settings = [];
+		}
+		return settings;
+	};
+
+	PrivacyGenerator.prototype.extendCookie = function (cookieName, numDays) {
+		var settings;
+		var cookieContent = document.cookie.split('; ').find(function (val, ind) {
+			return val.startsWith(cookieName);
+		});
+		if (typeof cookieContent !== "undefined") {
+			settings = decodeURIComponent(cookieContent).split("&");
+		} else {
+			settings = [];
+		}
+		return settings;
+	};
+
+	// Generate a stable anonymous user identifier
+	PrivacyGenerator.prototype.generateUserId = function () {
+		var hex = function (buf) {
+			return Array.prototype.map.call(buf, function (x) {
+				return ('00' + x.toString(16)).slice(-2);
+			}).join('');
+		};
+		if (window.crypto && window.crypto.getRandomValues) {
+			var bytes = new Uint8Array(16);
+			window.crypto.getRandomValues(bytes);
+			// RFC4122 v4 variant
+			bytes[6] = (bytes[6] & 0x0f) | 0x40;
+			bytes[8] = (bytes[8] & 0x3f) | 0x80;
+			var h = hex(bytes);
+			return [h.substr(0, 8), h.substr(8, 4), h.substr(12, 4), h.substr(16, 4), h.substr(20, 12)].join('-');
+		}
+		// Fallback (not RFC4122, but stable enough)
+		return 'uid-' + (Date.now().toString(36)) + '-' + Math.random().toString(36).substr(2, 10);
+	};
+
+	// Read the existing user id from cookie (if present)
+	PrivacyGenerator.prototype.getUserId = function () {
+		var cookieValue = this.loadCookie(this.cookieName);
+		if (typeof cookieValue !== "undefined") {
+			var cookieSettings = this.cookieParams(cookieValue);
+			var userId = cookieSettings.find(function (val) {
+				return val.startsWith("userid=");
+			});
+			if (userId) {
+				return userId.replace("userid=", "");
+			}
+		}
+		return undefined;
+	};
+
+	// Ensure user id is present by extending current cookie settings
+	PrivacyGenerator.prototype.ensureUserIdInCookie = function () {
+		var cookieValue = this.loadCookie(this.cookieName);
+		if (typeof cookieValue === "undefined") return;
+		var settings = this.cookieParams(cookieValue);
+		var hasUserId = settings.find(function (val) {
+			return val.startsWith("userid=");
+		});
+		if (!hasUserId) {
+			var userIdParam = "userid=" + this.generateUserId();
+			settings.push(userIdParam);
+			var newCookieVal = settings.join("&");
+			this.addCookie(this.cookieName, this.hostName, newCookieVal, 365);
+		}
+	};
+
+	PrivacyGenerator.prototype.acceptCategory = function (category) {
+		var previousCategories = this.getCategories();
+		var categories = "groups=" + category;
+		var currentDate = "datestamp=" + Date.now();
+		var currentVersion = "version=" + this.version;
+		var existingUserId = this.getUserId();
+		if (!existingUserId) {
+			existingUserId = this.generateUserId();
+		}
+		var userIdParam = "userid=" + existingUserId;
+		var cookieVal = categories + "&" + currentDate + "&" + currentVersion + "&" + userIdParam;
+		this.addCookie(this.cookieName, this.hostName, cookieVal, 365);
+		console.log("CMP cookie added");
+		console.log(cookieVal);
+		// Send hit to external server with consent change details
+		try {
+			var newCategories = category.split(":");
+			var added = newCategories.filter(function (c) { return previousCategories.indexOf(c) === -1; });
+			var removed = previousCategories.filter(function (c) { return newCategories.indexOf(c) === -1; });
+			this.sendConsentUpdate({
+				userId: existingUserId,
+				timestamp: Date.now(),
+				change: { added: added, removed: removed },
+				allConsented: newCategories,
+				version: this.version
+			});
+		} catch (e) { }
+		this.updateModalSettings(this.modal, true);
+
+	};
+
+	PrivacyGenerator.prototype.getCategories = function () {
+		var cookieValue = this.loadCookie(this.cookieName);
+		if (typeof cookieValue !== "undefined") {
+			// relevante waardes oude cookie uitlezen en updaten
+			var cookieSettings = this.cookieParams(cookieValue);
+			var currentCategory = cookieSettings.find(function (val) {
+				return val.startsWith("groups=")
+			})
+			return currentCategory.replace("groups=", "").split(":");
+		}
+		return this.defaultConsentedCategories;
+	};
+
+	PrivacyGenerator.prototype.updateModalSettings = function (modal, close) {
+		var close = close || false;
+		var cookieCategories = this.getCategories(); // bv ["groups=C0001:C0002", "datestamp=...", "version=..."]
+		this.sendDataLayerEvent("update");
+		if (cookieCategories) {
+			var switches = modal.querySelectorAll(".switch input");
+			// Zet checkboxes op basis van aanwezigheid in cookie
+			switches[0].checked = cookieCategories.includes("C0003"); // Voorkeur
+			switches[1].checked = cookieCategories.includes("C0004"); // Marketing
+		}
+		if (close == true) {
+			window.setTimeout(function () {
+				modal.style.display = "none";
+			}, 1000)
+		}
+	};
+
+	PrivacyGenerator.prototype.sendDataLayerEvent = function (type) {
+		var type = type || "init"
+		var event = type == "init" ? "customCookiebarInitEvent" : "customCookiebarUpdateEvent";
+		var cookieCategories = this.getCategories();
+		window.dataLayer = window.dataLayer || [];
+		window.dataLayer.push({
+			'event': event,
+			'consentedCategories': cookieCategories.join(",")
+		})
+	};
+
+	// Public: send a hit to external server with consent update info
+	PrivacyGenerator.prototype.sendConsentUpdate = function (payload) {
+		var endpoint = 'https://example.com/consent-hit';
+		try {
+			if (!payload.version) { payload.version = this.version; }
+			var body = JSON.stringify(payload);
+			if (navigator.sendBeacon) {
+				var blob = new Blob([body], { type: 'application/json' });
+				navigator.sendBeacon(endpoint, blob);
+				return;
+			}
+			if (typeof fetch === 'function') {
+				fetch(endpoint, {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: body,
+					keepalive: true,
+					mode: 'no-cors',
+					credentials: 'omit'
+				});
+			}
+		} catch (e) { }
+	};
+
+	PrivacyGenerator.prototype.showModal = function () {
+		this.modal.style.display = "block";
+	}
+
+	var privacyGenerator = new PrivacyGenerator("", "6.33.0", modal);
+	// privacyGenerator.acceptCategory("C0002");
+
+</script>
