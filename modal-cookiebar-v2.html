@@ -1,20 +1,153 @@
-<!doctype html>
-<html lang="nl">
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Cookie voorkeuren</title>
-	<style>
-	/* The Modal (background) */
-	h2 {
-		margin: 10px 0;
-		color: #2196F3;
+<style>
+	/* Complete CSS isolation for cookie banner */
+	.oscbr *,
+	.oscbr *::before,
+	.oscbr *::after {
+		all: unset;
+		box-sizing: border-box;
+		display: revert;
 	}
 
-	.modal {
+	/* Ensure proper element behavior */
+	.oscbr button {
+		cursor: pointer;
+	}
+
+	.oscbr input[type="checkbox"] {
+		appearance: none;
+		-webkit-appearance: none;
+	}
+
+	.oscbr p {
+		display: block;
+		margin-block-start: 1em;
+		margin-block-end: 1em;
+		margin-inline-start: 0px;
+		margin-inline-end: 0px;
+	}
+
+	.oscbr h2 {
+		font-size: 1.5em;
+		margin-block-start: 0.83em;
+		margin-block-end: 0.83em;
+		margin-inline-start: 0;
+		margin-inline-end: 0;
+		font-weight: bold;
+		margin: 0;
+		color: var(--cb-theme);
+		display: inline-block;
+		vertical-align: middle;
+		line-height: 1.5;
+	}
+
+	/* HTML elements support in intro and category texts */
+	.oscbr p strong,
+	.oscbr p b {
+		font-weight: bold;
+	}
+
+	.oscbr p em,
+	.oscbr p i {
+		font-style: italic;
+	}
+
+	.oscbr p a {
+		color: var(--cb-theme);
+		text-decoration: underline;
+		cursor: pointer;
+	}
+
+	.oscbr p a:hover {
+		text-decoration: none;
+	}
+
+	.oscbr p u {
+		text-decoration: underline;
+	}
+
+	.oscbr p br {
+		display: block;
+	}
+
+	.oscbr p ul,
+	.oscbr p ol {
+		display: block;
+		margin-left: 20px;
+		margin-top: 0.5em;
+		margin-bottom: 0.5em;
+	}
+
+	.oscbr p ul {
+		list-style-type: disc;
+	}
+
+	.oscbr p ol {
+		list-style-type: decimal;
+	}
+
+	.oscbr p li {
+		display: list-item;
+		margin-bottom: 0.25em;
+	}
+
+	.oscbr p code {
+		font-family: monospace;
+		background-color: rgba(0, 0, 0, 0.05);
+		padding: 2px 4px;
+		border-radius: 3px;
+	}
+
+	.oscbr p sup {
+		vertical-align: super;
+		font-size: 0.75em;
+	}
+
+	.oscbr p sub {
+		vertical-align: sub;
+		font-size: 0.75em;
+	}
+
+	/* Modal overlay (background) */
+	.oscbr {
+		--cb-theme: #d15137;
+		/* buttons, header, active slider */
+		--cb-bg: #ffffff;
+		/* modal/background panels */
+		--cb-text: #333333;
+		/* body text */
+		--cb-overlay: rgba(0, 0, 0, 0.4);
+		/* modal overlay */
+		--cb-slider-off: #ccc;
+		/* slider off state */
+		--cb-button-text: #ffffff;
+		/* button label color */
+		--cb-muted: #aaa;
+		/* subtle UI text */
+		--cb-border: #888;
+		/* borders */
+		--cb-accordion-bg: #eee;
+		/* accordion header */
+		--cb-accordion-hover-bg: #ddd;
+		/* accordion hover/active */
+		--cb-accordion-text: #444;
+		/* accordion text */
+		--cb-accept-bg: #d15137;
+		/* accept button background */
+		--cb-accept-text: #ffffff;
+		/* accept button text */
+		--cb-deny-bg: #d15137;
+		/* deny button background */
+		--cb-deny-text: #ffffff;
+		/* deny button text */
+		--cb-save-bg: #d15137;
+		/* save button background */
+		--cb-save-text: #ffffff;
+		/* save button text */
+		--cb-focus: #d15137;
+		/* focus indicators / WCAG accessibility outlines */
 		display: none;
 		position: fixed;
-		z-index: 999;
+		z-index: 2147483647;
 		left: 0;
 		top: 0;
 		width: 100%;
@@ -23,561 +156,1734 @@
 		/* Full height */
 		overflow: auto;
 		/* Enable scroll if needed */
-		background-color: rgb(0, 0, 0);
-		/* Fallback color */
-		background-color: rgba(0, 0, 0, 0.4);
+		background-color: var(--cb-overlay);
 		/* Black w/ opacity */
 	}
 
-	/* Modal Content/Box */
-	.modal-content {
-		background-color: #fefefe;
+	/* Language selector */
+	.oscbr .oscbr-language-selector {
+		display: none;
+		margin-left: 15px;
+		margin-top: 0;
+		margin-bottom: 0;
+		vertical-align: middle;
+	}
+
+	/* Show language selector when active */
+	.oscbr .oscbr-language-selector[style*="display: block"],
+	.oscbr .oscbr-language-selector[style*="display:block"] {
+		display: inline-block !important;
+	}
+
+	.oscbr .oscbr-language-selector select {
+		padding: 6px 12px;
+		border: 1px solid var(--cb-border);
+		background-color: var(--cb-bg);
+		color: var(--cb-text);
+		font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+		font-size: 13px;
+		cursor: pointer;
+		border-radius: 4px;
+		line-height: 1.5;
+		vertical-align: middle;
+		touch-action: manipulation;
+	}
+
+	.oscbr .oscbr-language-selector select:focus {
+		outline: 2px solid var(--cb-focus);
+		outline-offset: 0px;
+		transition: outline 0.15s ease;
+	}
+
+	.oscbr .oscbr-language-selector select:focus-visible {
+		outline: 2px solid var(--cb-focus);
+		outline-offset: 0px;
+	}
+
+	/* Header container with language selector */
+	.oscbr .oscbr-header-container {
+		margin-bottom: 10px;
+		line-height: 1.5;
+		white-space: nowrap;
+	}
+
+	/* Screen reader only content */
+	.oscbr .oscbr-sr-only {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		padding: 0;
+		margin: -1px;
+		overflow: hidden;
+		clip: rect(0, 0, 0, 0);
+		white-space: nowrap;
+		border-width: 0;
+	}
+
+	/* Modal content (content box) */
+	.oscbr .oscbr-modal-content {
+		background-color: var(--cb-bg);
 		margin: 5% auto;
 		padding: 20px;
-		border: 1px solid #888;
+		border: 1px solid var(--cb-border);
 		max-width: 600px;
 		font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-		color: #333;
+		color: var(--cb-text);
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 		/* Could be more or less, depending on screen size */
 	}
 
-	/* The Close Button */
-	.close {
-		color: #aaa;
+	/* Mobile responsive: position modal at bottom */
+	@media screen and (max-width: 768px) {
+		.oscbr .oscbr-modal-content {
+			margin: auto auto 0 auto;
+			max-width: 100%;
+			border-left: none;
+			border-right: none;
+			border-bottom: none;
+			max-height: 80vh;
+			overflow-y: auto;
+			bottom: 0 !important;
+			position: fixed;
+			z-index: 30000;
+		}
+	}
+
+	/* Close button */
+	.oscbr .oscbr-close {
+		color: var(--cb-muted);
 		float: right;
 		font-size: 28px;
 		font-weight: bold;
 		background: transparent;
 		border: none;
+		width: 44px;
+		height: 44px;
+		padding: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition: color 0.15s ease;
+		-webkit-tap-highlight-color: transparent;
+		touch-action: manipulation;
+		user-select: none;
+		-webkit-user-select: none;
 	}
 
-	.close:hover,
-	.close:focus {
-		color: black;
+	.oscbr .oscbr-close:hover {
+		color: var(--cb-text);
 		text-decoration: none;
 		cursor: pointer;
+		transition: color 0.15s ease;
 	}
 
-	/* Style the buttons that are used to open and close the accordion panel */
-	.accordion {
-		background-color: #eee;
-		color: #444;
+	.oscbr .oscbr-close:focus {
+		color: var(--cb-text);
+		outline: 2px solid var(--cb-focus);
+		outline-offset: -2px;
+		transition: color 0.15s ease, outline 0.15s ease;
+	}
+
+	.oscbr .oscbr-close:focus-visible {
+		outline: 2px solid var(--cb-focus);
+		outline-offset: -2px;
+	}
+
+	/* Mobile tap highlight for iOS */
+	@media (hover: none) and (pointer: coarse) {
+		.oscbr .oscbr-close:active {
+			outline: 2px solid var(--cb-focus);
+			outline-offset: -2px;
+		}
+	}
+
+	/* Accordion buttons (toggle open/close) */
+	.oscbr .oscbr-accordion {
+		background-color: var(--cb-accordion-bg);
+		color: var(--cb-accordion-text);
 		cursor: pointer;
-		padding: 10px;
+		padding: 12px 10px;
 		width: 100%;
 		text-align: left;
-		/* border: 1px solid #bbb; */
 		border: none;
 		outline: none;
-		transition: 0.4s;
-		font-size: 14px;
+		transition: background-color 0.2s ease, outline 0.15s ease;
+		font-size: 15px;
 		line-height: 24px;
+		min-height: 44px;
+		-webkit-tap-highlight-color: transparent;
+		touch-action: manipulation;
+		user-select: none;
+		-webkit-user-select: none;
 	}
 
-	.active,
-	.accordion:hover {
-		background-color: #ddd;
+	.oscbr .oscbr-active,
+	.oscbr .oscbr-accordion:hover {
+		background-color: var(--cb-accordion-hover-bg);
 	}
 
-	.panel {
+	.oscbr .oscbr-accordion:focus {
+		outline: 2px solid var(--cb-focus);
+		outline-offset: -2px;
+	}
+
+	.oscbr .oscbr-accordion:focus-visible {
+		outline: 2px solid var(--cb-focus);
+		outline-offset: -2px;
+	}
+
+	/* Mobile tap highlight for accordion on iOS - show focus during tap */
+	@media (hover: none) and (pointer: coarse) {
+		.oscbr .oscbr-accordion:active {
+			outline: 2px solid var(--cb-focus);
+			outline-offset: -2px;
+			background-color: var(--cb-accordion-hover-bg);
+		}
+	}
+
+	.oscbr .oscbr-panel {
 		padding: 0 18px;
-		background-color: white;
+		background-color: var(--cb-bg);
 		max-height: 0;
 		overflow: hidden;
-		transition: max-height 0.2s ease-out;
+		transition: max-height 0.25s ease-in-out;
 		border: 1px solid #bbb;
+		-webkit-transform: translateZ(0);
+		transform: translateZ(0);
+		will-change: max-height;
 	}
 
-	.accordion:after {
+	/* Mobile-specific panel adjustments to prevent flickering */
+	@media (hover: none) and (pointer: coarse) {
+		.oscbr .oscbr-panel {
+			transition: max-height 0.3s ease-in-out;
+			-webkit-backface-visibility: hidden;
+			backface-visibility: hidden;
+		}
+	}
+
+	.oscbr .oscbr-accordion:after {
 		content: '\02795';
-		/* Unicode character for "plus" sign (+) */
+		/* Unicode for plus sign (+) */
 		font-size: 13px;
 		color: #777;
 		float: right;
 		margin-left: 5px;
 	}
 
-	.active:after {
+	.oscbr .oscbr-active:after {
 		content: "\2796";
-		/* Unicode character for "minus" sign (-) */
+		/* Unicode for minus sign (-) */
 	}
 
-	/* Toggle switch */
-	/* The switch - the box around the slider */
-	.switch {
+	/* Switches (custom checkbox styling) */
+	.oscbr .oscbr-switch {
 		position: absolute;
-		/* display: inline-block; */
 		width: 40px;
 		height: 20px;
 		margin: 2px 10px;
 	}
 
 	/* Hide default HTML checkbox */
-	.switch input {
+	.oscbr .oscbr-switch input {
 		opacity: 0;
 		width: 0;
 		height: 0;
 	}
 
-	/* The slider */
-	.slider {
+	/* Slider element */
+	.oscbr .oscbr-slider {
 		position: absolute;
 		cursor: pointer;
 		top: 0;
 		left: 0;
 		right: 0;
 		bottom: 0;
-		background-color: #ccc;
-		-webkit-transition: .4s;
-		transition: .4s;
+		background-color: var(--cb-slider-off);
+		-webkit-transition: background-color 0.2s ease, box-shadow 0.15s ease;
+		transition: background-color 0.2s ease, box-shadow 0.15s ease;
 	}
 
-	.slider:before {
+	.oscbr .oscbr-slider:before {
 		position: absolute;
 		content: "";
-		height: 15px;
-		width: 15px;
+		height: 16px;
+		width: 16px;
 		left: 4px;
 		bottom: 2px;
-		background-color: white;
-		-webkit-transition: .4s;
-		transition: .4s;
+		background-color: var(--cb-bg);
+		-webkit-transition: transform 0.2s ease;
+		transition: transform 0.2s ease;
 	}
 
-	input:checked+.slider {
-		background-color: #2196F3;
+	.oscbr input:checked+.oscbr-slider {
+		background-color: var(--cb-theme);
 	}
 
-	input:focus+.slider {
-		box-shadow: 0 0 1px #2196F3;
+	.oscbr input:focus+.oscbr-slider {
+		box-shadow: 0 0 4px var(--cb-focus);
+		outline: 2px solid var(--cb-focus);
+		outline-offset: 1px;
 	}
 
-	input:checked+.slider:before {
+	.oscbr input:focus-visible+.oscbr-slider {
+		box-shadow: 0 0 4px var(--cb-focus);
+		outline: 2px solid var(--cb-focus);
+		outline-offset: 1px;
+	}
+
+	/* Mobile tap highlight for switches on iOS */
+	@media (hover: none) and (pointer: coarse) {
+		.oscbr input:active+.oscbr-slider {
+			box-shadow: 0 0 4px var(--cb-focus);
+			outline: 2px solid var(--cb-focus);
+			outline-offset: 1px;
+		}
+	}
+
+	.oscbr input:checked+.oscbr-slider:before {
 		-webkit-transform: translateX(16px);
 		-ms-transform: translateX(16px);
 		transform: translateX(16px);
 	}
 
 	/* Rounded sliders */
-	.slider.round {
+	.oscbr .oscbr-slider.oscbr-round {
 		border-radius: 34px;
 	}
 
-	.slider.round:before {
+	.oscbr .oscbr-slider.oscbr-round:before {
 		border-radius: 50%;
 	}
 
-	div.cookie_buttons {
+	/* Buttons: accept/deny/save */
+	.oscbr div.oscbr-cookie-buttons {
 		width: 100%;
 		display: block;
 		padding: 10px 0;
 		text-align: center;
 	}
 
-	div.cookie_buttons button {
+	.oscbr div.oscbr-cookie-buttons button {
 		display: inline-block;
 		width: 160px;
-		height: 50px;
+		min-height: 44px;
 		margin: 5px;
-		padding: 0 !important;
+		padding: 10px 5px;
 		text-align: center;
-		border: none;
-		background-color: #2196F3;
-		color: #fff;
 		cursor: pointer;
+		font-size: 14px;
+		font-weight: normal;
+		line-height: 18px;
+		border-radius: 5px;
+		transition: transform 0.15s ease, box-shadow 0.15s ease;
+		-webkit-tap-highlight-color: transparent;
+		touch-action: manipulation;
+		user-select: none;
+		-webkit-user-select: none;
+	}
+
+	.oscbr div.oscbr-cookie-buttons button:hover {
+		transform: translateY(-1px);
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+	}
+
+	.oscbr div.oscbr-cookie-buttons button:active {
+		transform: translateY(0);
+	}
+
+	.oscbr div.oscbr-cookie-buttons button:focus {
+		outline: 2px solid var(--cb-focus);
+		outline-offset: 2px;
+	}
+
+	.oscbr div.oscbr-cookie-buttons button:focus-visible {
+		outline: 2px solid var(--cb-focus);
+		outline-offset: 2px;
+	}
+
+	/* Mobile tap highlight for buttons on iOS */
+	@media (hover: none) and (pointer: coarse) {
+		.oscbr div.oscbr-cookie-buttons button:active {
+			outline: 2px solid var(--cb-focus);
+			outline-offset: 2px;
+		}
+	}
+
+	/* Individual button styling */
+	.oscbr div.oscbr-cookie-buttons button#oscbr-accept {
+		background-color: var(--cb-accept-bg);
+		color: var(--cb-accept-text);
+	}
+
+	.oscbr div.oscbr-cookie-buttons button#oscbr-deny {
+		background-color: var(--cb-deny-bg);
+		color: var(--cb-deny-text);
+	}
+
+	.oscbr div.oscbr-cookie-buttons button#oscbr-save-settings {
+		background-color: var(--cb-save-bg);
+		color: var(--cb-save-text);
 	}
 </style>
-</head>
-
-<body>
-<!-- The Modal -->
-<div id="myModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="cookiebar-title">
+<html>
+<!-- Modal overlay and dialog -->
+<div id="oscbr" class="oscbr" role="dialog">
 	<!-- Modal content -->
-	<div class="modal-content">
-		<button type="button" class="close" aria-label="Sluiten">&times;</button>
-		<div class="modalcontent">
-			<h2 id="cookiebar-title">Cookie voorkeuren</h2>
-			<p>Deze website maakt gebruik van cookies. Hierin wordt informatie opgeslagen, meestal bedoeld om de website beter te laten werken. De informatie identificeert u normaal gesproken niet direct, maar kan u een beter op uw voorkeuren toegesneden surfervaring geven. Omdat we uw recht op privacy respecteren, kunt u er voor kiezen sommige soorten cookies te blokkeren.</p> 
-			<!-- Accordeon -->
-			<button id="accordion-required" class="accordion" type="button" aria-expanded="false" aria-controls="panel-required">Strikt noodzakelijke cookies</button>
-			<div id="panel-required" class="panel" role="region" aria-labelledby="accordion-required">
-				<p>Deze cookies zijn nodig anders werkt de website niet. Deze cookies kunnen niet worden uitgeschakeld. In de meeste gevallen worden deze cookies alleen gebruikt naar aanleiding van een handeling van u waarmee u in wezen een dienst aanvraagt, bijvoorbeeld uw privacyinstellingen registreren, in de website inloggen of een formulier invullen. U kunt uw browser instellen om deze cookies te blokkeren of om u voor deze cookies te waarschuwen, maar sommige delen van de website zullen dan niet werken. Deze cookies slaan geen persoonlijk identificeerbare informatie
-					op.</p>
+	<div class="oscbr-modal-content">
+		<button type="button" class="oscbr-close">&times;<span class="oscbr-sr-only">Close</span></button>
+		<div class="oscbr-modalcontent">
+		<div class="oscbr-header-container">
+			<h2 id="oscbr-cookiebar-title">Header title</h2>
+			<div class="oscbr-language-selector" id="oscbr-language-selector">
+				<select id="oscbr-language-select" tabindex="-1">
+					<!-- Languages will be populated dynamically -->
+				</select>
 			</div>
-			<button id="accordion-performance" class="accordion" type="button" aria-expanded="false" aria-controls="panel-performance">Prestatie cookies</button>
-			<div id="panel-performance" class="panel" role="region" aria-labelledby="accordion-performance">
-				<p>Deze cookies stellen ons in staat bezoekers en hun herkomst te tellen zodat we de prestatie van onze website kunnen analyseren en verbeteren. Ze helpen ons te begrijpen welke pagina’s het meest en minst populair zijn en hoe bezoekers zich door de gehele site bewegen. Alle informatie die deze cookies verzamelen wordt geaggregeerd en is daarom anoniem. Als u deze cookies niet toestaat, weten wij niet wanneer u onze site heeft bezocht. <br><br> In het <a href="https://policies.google.com/technologies/partner-sites" rel="nofollow" tabindex="0">Privacybeleid en Servicevoorwaarden van Google</a> beschrijft Google hoe zij uw persoonsgegevens gebruiken.</p>
-			</div>
-			<button id="accordion-preferences" class="accordion" type="button" aria-expanded="false" aria-controls="panel-preferences">Voorkeur cookies
-				<label class="switch" id="preferences-cookie">
-					<input type="checkbox" aria-label="Voorkeuren cookies toestaan">
-					<span class="slider round"></span>
+		</div>
+			<p id="oscbr-introduction">Introduction text</p>
+			<!-- Live region for status announcements -->
+			<div class="oscbr-sr-only" id="oscbr-consent-status"></div>
+			<!-- Accordion sections -->
+			<button id="oscbr-accordion-required" class="oscbr-accordion" type="button"><span
+					class="oscbr-accordion-title" data-category="required">Required cookies title</span>
+				<label class="oscbr-switch" id="oscbr-required-cookie">
+					<input type="checkbox">
+					<span class="oscbr-slider oscbr-round"></span>
 				</label>
 			</button>
-			<div id="panel-preferences" class="panel" role="region" aria-labelledby="accordion-preferences">
-				<p>Deze cookies worden gebruikt om uw voorkeuren op te slaan. We gebruiken de cookies om de website beter te laten aansluiten aan uw voorkeuren.</p>
+			<div id="oscbr-panel-required" class="oscbr-panel">
+				<p id="oscbr-body-required">Required cookies description</p>
 			</div>
-			<button id="accordion-marketing" class="accordion" type="button" aria-expanded="false" aria-controls="panel-marketing">Marketing cookies
-				<label class="switch" id="marketing-cookie">
-					<input type="checkbox" aria-label="Marketing cookies toestaan">
-					<span class="slider round"></span>
+			<button id="oscbr-accordion-performance" class="oscbr-accordion" type="button"><span
+					class="oscbr-accordion-title" data-category="analytical">Performance cookies title</span>
+				<label class="oscbr-switch" id="oscbr-analytical-cookie">
+					<input type="checkbox">
+					<span class="oscbr-slider oscbr-round"></span>
 				</label>
 			</button>
-			<div id="panel-marketing" class="panel" role="region" aria-labelledby="accordion-marketing">
-				<p>Deze cookies kunnen door onze adverteerders op onze website worden ingesteld. Ze worden wellicht door die bedrijven gebruikt om een profiel van uw interesses samen te stellen en u relevante advertenties op andere websites te tonen. Ze slaan geen directe persoonlijke informatie op, maar ze zijn gebaseerd op unieke identificatoren van uw browser en internetapparaat. Als u deze cookies niet toestaat, zult u minder op u gerichte advertenties zien.</p>
+			<div id="oscbr-panel-performance" class="oscbr-panel">
+				<p id="oscbr-body-analytical">Performance cookies description</p>
 			</div>
-			<div class="cookie_buttons">
-				<button type="button" id="accept">Alle cookies accepteren</button>
-				<button type="button" id="deny">Alle cookies weigeren</button>
-				<button type="button" id="save-settings">Aanpassingen opslaan</button>
+			<button id="oscbr-accordion-preferences" class="oscbr-accordion" type="button"><span
+					class="oscbr-accordion-title" data-category="preferences">Preferences cookies title</span>
+				<label class="oscbr-switch" id="oscbr-preferences-cookie">
+					<input type="checkbox">
+					<span class="oscbr-slider oscbr-round"></span>
+				</label>
+			</button>
+			<div id="oscbr-panel-preferences" class="oscbr-panel">
+				<p id="oscbr-body-preferences">Preferences cookies description</p>
+			</div>
+			<button id="oscbr-accordion-marketing" class="oscbr-accordion" type="button"><span
+					class="oscbr-accordion-title" data-category="marketing">Marketing cookies title</span>
+				<label class="oscbr-switch" id="oscbr-marketing-cookie">
+					<input type="checkbox">
+					<span class="oscbr-slider oscbr-round"></span>
+				</label>
+			</button>
+			<div id="oscbr-panel-marketing" class="oscbr-panel">
+				<p id="oscbr-body-marketing">Marketing cookies description</p>
+			</div>
+			<div class="oscbr-cookie-buttons">
+				<button type="button" id="oscbr-accept">Accept button</button>
+				<button type="button" id="oscbr-deny">Deny button</button>
+				<button type="button" id="oscbr-save-settings">Save button</button>
 			</div>
 		</div>
 	</div>
 </div>
-</body>
+
+</html>
 <script>
-	// Get the modal
-	const modal = document.getElementById("myModal");
-	const closeBtn = document.querySelector(".close");
-	closeBtn.addEventListener("click", function () {
-		modal.style.display = "none";
-	});
-	modal.addEventListener("click", function (event) {
-		if (event.target === modal) {
-			modal.style.display = "none";
-		}
-	});
-	document.addEventListener("keydown", function (e) {
-		if (e.key === "Escape" && modal.style.display === "block") {
-			modal.style.display = "none";
-		}
-	});
+	// PrivacyGenerator CMP - Global class definition wrapped in IIFE
+	(function () {
+		/**
+		 * PrivacyGenerator
+		 * Manages consent groups, cookie storage/refresh, and UI sync for the cookie bar.
+		 * @param {Object} options - Configuration options for the CMP
+		 * @param {string} options.host - Domain used for the cookie's domain attribute (e.g., ".example.com")
+		 * @param {string} options.version - CMP version string; increasing this invalidates existing consen
+		 * @param {HTMLElement} options.modal - Root modal container elemen
+		 * @param {string} [options.apiKey] - Optional API key included with consent updates
+		 * @param {string} [options.consentEndpoint] - Full URL for consent endpoint; required if sendToServer is true
+		 * @param {string} [options.cookieName="customConsent"] - Name of the consent cookie
+		 * @param {Object} [options.categoryConfig] - Per-category configuration with required and defaultEnabled flags
+		 * @param {number} [options.cookieLifetimeDays=365] - Cookie lifetime in days
+		 * @param {number} [options.refreshDays=700] - Days to extend the cookie on validation
+		 * @param {boolean} [options.dismissible=true] - If true, modal can be closed without making a choice; if false, user must choose
+		 * @param {boolean} [options.multilingual=false] - If true, enable language selection dropdown
+		 * @param {boolean} [options.langAutoSelect=false] - If true, automatically select language based on browser settings
+		 * @param {boolean} [options.sendToServer=true] - If true, consent updates will be sent to the server; if false, no server requests are made
+		 * @param {boolean} [options.autoFocus=true] - If true, automatically focus modal when shown (prioritizes language selector); if false, no automatic focus
+		 * @param {string} [options.logLevel="INFO"] - Logging level: NONE, ERROR, WARN, INFO, DEBUG (default: INFO)
+		 * @param {Array} [options.texts] - Array of language objects with lang property and translations
+		 * @param {number} [options.delayBeforeSave=500] - Delay in ms before saving consent choice
+		 * @param {number} [options.delayModalClose=1000] - Delay in ms before closing modal after action
+		 * @param {number} [options.delayInitialFocus=100] - Delay in ms before setting initial focus
+		 */
+		var PrivacyGenerator = function (options) {
+			var that = this;
+			options = options || {};
+			this.version = options.version;
+			this.hostName = options.host;
+			this.cookieName = options.cookieName || "customConsent";
+			this.modal = options.modal;
+			this.sendToServer = typeof options.sendToServer === "boolean" ? options.sendToServer : true;
+			this.autoFocus = typeof options.autoFocus === "boolean" ? options.autoFocus : true;
+			this.lastFocusedElement = null; // Track last focused element for focus managemen
 
-	// Code accordeon
-	var acc = document.getElementsByClassName("accordion");
-	for (var i = 0; i < acc.length; i++) {
-		acc[i].addEventListener("click", function () {
-			this.classList.toggle("active");
-			var panelId = this.getAttribute("aria-controls");
-			var panel = panelId ? document.getElementById(panelId) : this.nextElementSibling;
-			var expanded = this.getAttribute("aria-expanded") === "true";
-			this.setAttribute("aria-expanded", expanded ? "false" : "true");
-			if (panel && panel.style.maxHeight) {
-				panel.style.maxHeight = null;
-			} else if (panel) {
-				panel.style.maxHeight = panel.scrollHeight + "px";
+			// Configurable delays
+			this.delays = {
+				beforeSave: typeof options.delayBeforeSave === "number" ? options.delayBeforeSave : 500,
+				modalClose: typeof options.delayModalClose === "number" ? options.delayModalClose : 1000,
+				initialFocus: typeof options.delayInitialFocus === "number" ? options.delayInitialFocus : 100
+			};
+
+			// Event listener tracking for cleanup
+			this.eventListeners = [];
+
+			// Logging configuration
+			var logLevels = { NONE: 0, ERROR: 1, WARN: 2, INFO: 3, DEBUG: 4 };
+			this.logLevel = options.logLevel || "INFO";
+			this.logLevelValue = logLevels[this.logLevel.toUpperCase()] || logLevels.INFO;
+
+			// Centralized logging function with CMP prefix
+			this.log = function (level, message, data) {
+				// NONE means no logging at all
+				if (that.logLevelValue === 0) return;
+
+				var levelValue = logLevels[level] || 0;
+				if (levelValue > that.logLevelValue) return;
+
+				var prefix = "CMP: ";
+				if (data !== undefined) {
+					console[level.toLowerCase()](prefix + message, data);
+				} else {
+					console[level.toLowerCase()](prefix + message);
+				}
+			};
+
+			// Category configuration: required (cannot be toggled off) and defaultEnabled (on by default)
+			this.categoryConfig = options.categoryConfig || {
+				"strictly-necessary": { required: true, defaultEnabled: true },
+				"analytical": { required: false, defaultEnabled: false },
+				"preferences": { required: false, defaultEnabled: false },
+				"marketing": { required: false, defaultEnabled: false }
+			};
+
+			// Derive default consented categories from categoryConfig
+			var derivedDefaultCategories = [];
+			for (var catKey in this.categoryConfig) {
+				if (this.categoryConfig[catKey].defaultEnabled) {
+					derivedDefaultCategories.push(catKey);
+				}
 			}
-		});
-	}
+			this.defaultConsentedCategories = derivedDefaultCategories;
 
-	// Code Afhandeling Cookie Voorkeuren
-	// Polyfill array.find
-	if (!Array.prototype.find) {
-		Object.defineProperty(Array.prototype, 'find', {
-			enumerable: false,
-			configurable: true,
-			writable: true,
-			value: function (predicate) {
-				if (this == null) {
-					throw new TypeError('Array.prototype.find called on null or undefined');
-				}
-				if (typeof predicate !== 'function') {
-					throw new TypeError('predicate must be a function');
-				}
-				var list = Object(this);
-				var length = list.length >>> 0;
-				var thisArg = arguments[1];
-				var value;
+			this.api_key = options.apiKey || "";
+			this.cookieLifetimeDays = typeof options.cookieLifetimeDays === "number" ? options.cookieLifetimeDays : 365;
+			this.refreshDays = typeof options.refreshDays === "number" ? options.refreshDays : 365;
+			this.dismissible = typeof options.dismissible === "boolean" ? options.dismissible : true;
+			this.multilingual = typeof options.multilingual === "boolean" ? options.multilingual : false;
+			this.langAutoSelect = typeof options.langAutoSelect === "boolean" ? options.langAutoSelect : false;
 
-				for (var i = 0; i < length; i++) {
-					if (i in list) {
-						value = list[i];
-						if (predicate.call(thisArg, value, i, list)) {
-							return value;
+			// Set consent endpoint (no default - must be explicitly provided if sendToServer is true)
+			this.consentEndpoint = (typeof options.consentEndpoint === "string" && options.consentEndpoint.trim() !== "")
+				? options.consentEndpoint.trim()
+				: "";
+
+			// Text handling: support both old object format and new array format for multilingual
+			if (Array.isArray(options.texts)) {
+				// New multilingual format: array of language objects
+				this.textsArray = options.texts;
+				this.currentLanguage = null; // will be set next time we call initLanguageSelector
+
+			// Determine which language to use FIRST
+			if (this.textsArray.length > 0) {
+				// Auto-select language based on browser settings (only if multilingual is enabled)
+				if (this.multilingual && this.langAutoSelect) {
+					this.currentLanguage = this.detectBrowserLanguage();
+					if (this.currentLanguage) {
+						this.log("DEBUG", "Auto-detected language: " + this.currentLanguage);
+					}
+				}
+
+				// Fallback to first language if no match or if multilingual is disabled
+				if (!this.currentLanguage) {
+					this.currentLanguage = this.textsArray[0].lang;
+					this.log("DEBUG", "Using default language: " + this.currentLanguage);
+				}
+			}
+
+				// Get current language texts
+				this.texts = this.getTextsForLanguage(this.currentLanguage) || {};
+				if (!this.texts || !this.texts.header) {
+					this.log("WARN", "No texts found for language: " + this.currentLanguage);
+				}
+			}
+
+			try {
+				// ES5-compatible URL parameter parsing
+				var getUrlParam = function (name) {
+					var search = window.location.search || "";
+					if (search.indexOf("?") === 0) search = search.substring(1);
+					var params = search.split("&");
+					for (var i = 0; i < params.length; i++) {
+						var pair = params[i].split("=");
+						if (pair[0] === name) {
+							return decodeURIComponent(pair[1] || "");
+						}
+					}
+					return null;
+				};
+				var setCat = function (obj, key, prop, val) {
+					if (typeof val === "string" && val.trim() !== "") {
+						obj.categories = obj.categories || {};
+						obj.categories[key] = obj.categories[key] || {};
+						obj.categories[key][prop] = val.trim();
+					}
+				};
+				var headerParam = getUrlParam("header");
+				if (typeof headerParam === "string" && headerParam.trim() !== "") {
+					this.texts.header = headerParam.trim();
+				}
+				var introParam = getUrlParam("intro");
+				if (typeof introParam === "string" && introParam.trim() !== "") {
+					this.texts.intro = introParam.trim();
+				}
+				var acceptLabel = getUrlParam("accept_label");
+				if (typeof acceptLabel === "string" && acceptLabel.trim() !== "") {
+					this.texts.buttons = this.texts.buttons || {};
+					this.texts.buttons.accept = acceptLabel.trim();
+				}
+				var denyLabel = getUrlParam("deny_label");
+				if (typeof denyLabel === "string" && denyLabel.trim() !== "") {
+					this.texts.buttons = this.texts.buttons || {};
+					this.texts.buttons.deny = denyLabel.trim();
+				}
+				var saveLabel = getUrlParam("save_label");
+				if (typeof saveLabel === "string" && saveLabel.trim() !== "") {
+					this.texts.buttons = this.texts.buttons || {};
+					this.texts.buttons.save = saveLabel.trim();
+				}
+				setCat(this.texts, "required", "header", getUrlParam("required_header"));
+				setCat(this.texts, "required", "body", getUrlParam("required_body"));
+				setCat(this.texts, "analytical", "header", getUrlParam("analytical_header"));
+				setCat(this.texts, "analytical", "body", getUrlParam("analytical_body"));
+				setCat(this.texts, "preferences", "header", getUrlParam("preferences_header"));
+				setCat(this.texts, "preferences", "body", getUrlParam("preferences_body"));
+				setCat(this.texts, "marketing", "header", getUrlParam("marketing_header"));
+				setCat(this.texts, "marketing", "body", getUrlParam("marketing_body"));
+			} catch (e) {
+				// Silently fail URL parameter parsing - non-critical feature
+				this.log("DEBUG", "Failed to parse URL parameters: " + e.message);
+			}
+
+			// Cache frequently used DOM elements
+			this.domElements = {
+				acceptBtn: this.modal.querySelector("#oscbr-accept"),
+				denyBtn: this.modal.querySelector("#oscbr-deny"),
+				saveBtn: this.modal.querySelector("#oscbr-save-settings"),
+				closeBtn: this.modal.querySelector(".oscbr-close"),
+				statusEl: document.getElementById("oscbr-consent-status"),
+				headerEl: document.getElementById("oscbr-cookiebar-title"),
+				introEl: document.getElementById("oscbr-introduction"),
+				langSelector: document.getElementById("oscbr-language-selector"),
+				langSelect: document.getElementById("oscbr-language-select")
+			};
+
+			// Cache category switch elements
+			this.categorySwitches = {
+				"strictly-necessary": this.modal.querySelector("#oscbr-required-cookie input"),
+				"analytical": this.modal.querySelector("#oscbr-analytical-cookie input"),
+				"preferences": this.modal.querySelector("#oscbr-preferences-cookie input"),
+				"marketing": this.modal.querySelector("#oscbr-marketing-cookie input")
+			};
+
+			// Apply text overrides to DOM (now that domElements is cached)
+			this.applyTexts();
+
+			// Initialize language selector AFTER DOM elements are cached
+			if (this.multilingual && this.textsArray && this.textsArray.length > 0) {
+				this.initLanguageSelector();
+			}
+
+			// Initialize accessibility features (ARIA attributes, etc.)
+			this.initializeAccessibility();
+
+			// Initialize accordion functionality
+			this.initializeAccordions();
+
+			// Configure UI based on category settings (hide/disable switches for required categories)
+			this.configureCategoryUI();
+
+		// Configure close behavior based on dismissible setting
+		if (this.dismissible) {
+			// Modal is dismissible: show close button and attach listeners
+			if (this.domElements.closeBtn) this.domElements.closeBtn.style.display = "";
+			// Attach close handlers (bound to this instance for correct context)
+			this.addEventListener(this.domElements.closeBtn, "click", this.handleCloseBtn.bind(this));
+			this.addEventListener(this.modal, "click", this.handleBackgroundClick.bind(this));
+			this.addEventListener(document, "keydown", this.handleEscapeKey.bind(this));
+		} else {
+			// Modal is NOT dismissible: hide close button and do not attach listeners
+			if (this.domElements.closeBtn) this.domElements.closeBtn.style.display = "none";
+		}
+
+			// Button handlers: accept / deny / save
+			this.addEventListener(this.domElements.acceptBtn, "click", function () {
+				// Accept all categories - first update UI
+				for (var catKey in that.CATEGORY_SWITCH_MAP) {
+					var switchEl = that.categorySwitches[catKey];
+					if (switchEl && !that.categoryConfig[catKey].required) {
+						switchEl.checked = true;
+						switchEl.setAttribute("aria-checked", "true");
+					}
+				}
+				// Update live region
+				if (that.domElements.statusEl) {
+					var message = that.texts && that.texts.statusMessages && that.texts.statusMessages.accepted
+						? that.texts.statusMessages.accepted
+						: "All cookies accepted";
+					that.domElements.statusEl.textContent = message;
+				}
+				// Wait before saving
+				setTimeout(function () {
+					that.acceptCategory(that.ALL_CATEGORIES.join(":"));
+					that.modal.style.display = "none";
+					that.returnFocus();
+				}, that.delays.beforeSave);
+			});
+
+			this.addEventListener(this.domElements.denyBtn, "click", function () {
+				// Deny all optional categories - first update UI
+				for (var catKey in that.CATEGORY_SWITCH_MAP) {
+					var switchEl = that.categorySwitches[catKey];
+					if (switchEl && !that.categoryConfig[catKey].required) {
+						switchEl.checked = false;
+						switchEl.setAttribute("aria-checked", "false");
+					}
+				}
+				// Update live region
+				if (that.domElements.statusEl) {
+					var message = that.texts && that.texts.statusMessages && that.texts.statusMessages.denied
+						? that.texts.statusMessages.denied
+						: "Optional cookies denied";
+					that.domElements.statusEl.textContent = message;
+				}
+				// Wait before saving
+				setTimeout(function () {
+					var requiredCategories = [];
+					for (var catKey in that.categoryConfig) {
+						if (that.categoryConfig[catKey].required) {
+							requiredCategories.push(catKey);
+						}
+					}
+					that.acceptCategory(requiredCategories.join(":"));
+					that.modal.style.display = "none";
+					that.returnFocus();
+				}, that.delays.beforeSave);
+			});
+
+			this.addEventListener(this.domElements.saveBtn, "click", function () {
+				// Start with required categories
+				var groups = [];
+				for (var catKey in that.categoryConfig) {
+					if (that.categoryConfig[catKey].required) {
+						groups.push(catKey);
+					}
+				}
+
+				// Add optional categories based on switch state
+				for (var catKey in that.CATEGORY_SWITCH_MAP) {
+					if (!that.categoryConfig[catKey].required) {
+						var switchEl = that.categorySwitches[catKey];
+						if (switchEl && switchEl.checked) {
+							groups.push(catKey);
 						}
 					}
 				}
-				return undefined;
-			}
-		});
-	}
-	var PrivacyGenerator = function (host, version, modal, api_key) {
-		var that = this;
-		this.version = version;
-		this.hostName = host;
-		this.cookieName = "customConsent";
-		this.modal = modal;
-		this.defaultConsentedCategories = ["C0001","C0002"];
-		this.api_key = api_key || "";
 
-		// Button Event Handler
-		this.modal.querySelector("#accept").addEventListener("click", function () {
-			that.acceptCategory("C0001:C0002:C0003:C0004");
-			modal.style.display = "none";
-		});
+				// Update live region
+				if (that.domElements.statusEl) {
+					var message = that.texts && that.texts.statusMessages && that.texts.statusMessages.saved
+						? that.texts.statusMessages.saved
+						: "Cookie preferences saved";
+					that.domElements.statusEl.textContent = message;
+				}
 
-		this.modal.querySelector("#deny").addEventListener("click", function () {
-			that.acceptCategory("C0001:C0002");
-			modal.style.display = "none";
-		});
-
-		this.modal.querySelector("#save-settings").addEventListener("click", function () {
-			var groups = ["C0001","C0002"]; // always include strictly necessary
-			var prefSwitch = document.querySelector("#preferences-cookie input");
-			var marketingSwitch = document.querySelector("#marketing-cookie input");
-			if (prefSwitch && prefSwitch.checked) groups.push("C0003");
-			if (marketingSwitch && marketingSwitch.checked) groups.push("C0004");
-			that.acceptCategory(groups.join(":"));
-			modal.style.display = "none";
-		});
-
-		//check freshness version
-		var cookieContent = this.loadCookie(this.cookieName);
-		var settings = this.cookieParams(cookieContent);
-
-
-		if (settings.length > 0 && settings[0] !== "") {
-			var cookieValid = settings.find(function (val) {
-				return val == ("version=" + version)
+				// Wait before saving
+				setTimeout(function () {
+					that.acceptCategory(groups.join(":"));
+					that.modal.style.display = "none";
+					that.returnFocus();
+				}, that.delays.beforeSave);
 			});
-			if (typeof cookieValid == "undefined") {
-				console.log("Wrong version CMP");
-				that.removeCookie(that.cookieName, that.hostName);
+
+			// Version check and cookie validity
+			var cookieContent = this.loadCookie(this.cookieName);
+			var settings = this.cookieParams(cookieContent);
+
+			// Helper function to extract major version number (e.g., "2.0.1" -> "2")
+			var getMajorVersion = function (versionString) {
+				if (!versionString) return null;
+				var parts = versionString.split(".");
+				return parts.length > 0 ? parts[0] : null;
+			};
+
+			if (settings.length > 0 && settings[0] !== "") {
+				var cookieVersion = null;
+				// Extract version from cookie
+				for (var i = 0; i < settings.length; i++) {
+					if (settings[i].indexOf("version=") === 0) {
+						cookieVersion = settings[i].replace("version=", "");
+						break;
+					}
+				}
+
+				// Compare major versions only
+				var currentMajor = getMajorVersion(that.version);
+				var cookieMajor = getMajorVersion(cookieVersion);
+
+				if (cookieMajor !== currentMajor) {
+					that.log("DEBUG", "Major version changed (cookie: " + cookieVersion + ", current: " + that.version + ") - removing old cookie");
+					that.removeCookie(that.cookieName, that.hostName);
+					// Show modal to request new consent
+					that.modal.style.display = "block";
+					that.focusTrap(that.modal);
+					that.setInitialFocus(that.modal, that.autoFocus, that.multilingual);
+				} else {
+					that.log("DEBUG", "Compatible version CMP (cookie: " + cookieVersion + ", current: " + that.version + ") - refreshing cookie");
+					that.refreshCookie(that.cookieName, that.refreshDays);
+					that.ensureUserIdInCookie();
+				}
 			} else {
-				console.log("Correct version CMP");
-				that.refreshCookie(that.cookieName, 700);
-				that.ensureUserIdInCookie();
+				this.modal.style.display = "block";
+				// Set up focus trap and initial focus
+				this.focusTrap(this.modal);
+				this.setInitialFocus(this.modal, this.autoFocus, this.multilingual);
 			}
-		} else {
-			this.modal.style.display = "block";
-		}
 
-		this.sendDataLayerEvent();
+			// Initial dataLayer event (init)
+			this.sendDataLayerEvent();
 
-		var currentCategories = this.getCategories();
-		// if (currentCategories.length == 0) {
-		// 	this.modal.style.display = "block";
-		// }
-		this.updateModalSettings(this.modal);
+			var currentCategories = this.getCategories();
+			this.updateModalSettings(this.modal);
 
 
-	};
-	PrivacyGenerator.prototype.loadCookie = function (cookieName) {
-		var cookieContent = document.cookie.split('; ').find(function (val, ind) {
-			return val.startsWith(cookieName);
-		});
-		if (typeof cookieContent !== "undefined") {
-			cookieContent = decodeURIComponent(cookieContent);
-			cookieContent = cookieContent.replace(cookieName + "=", "");
-		}
-		return cookieContent;
-	};
-
-	PrivacyGenerator.prototype.removeCookie = function (cookieName, hostName) {
-		var cookieStr = cookieName + '=; path=/; domain=' + hostName + '; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-		document.cookie = cookieStr;
-		console.log("Cookie removed");
-		console.log(cookieStr);
-	};
-
-	PrivacyGenerator.prototype.addCookie = function (cookieName, hostName, cookieVal, exdays) {
-		var d = new Date();
-		d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
-		var expires = d.toUTCString();
-		var cookieStr = cookieName + '=' + cookieVal + '; path=/; domain=' + hostName + '; expires=' + expires + ';';
-		document.cookie = cookieStr;
-		console.log("Cookie CMP added");
-		console.log(cookieStr);
-	};
-
-	PrivacyGenerator.prototype.refreshCookie = function (cookieName, days) {
-		var exdate = new Date();
-		var cookieContent = this.loadCookie(cookieName);
-		exdate.setDate(exdate.getDate() + days);
-		document.cookie = encodeURIComponent(cookieName)
-			+ "=" + encodeURIComponent(cookieContent)
-			+ "; domain=" + encodeURIComponent(this.hostName)
-			+ (!exdate ? "" : "; expires=" + exdate.toUTCString());
-	};
-
-	PrivacyGenerator.prototype.cookieParams = function (cookieVal) {
-		var settings;
-		if (typeof cookieVal !== "undefined") {
-			settings = decodeURIComponent(cookieVal).split("&");
-		} else {
-			settings = [];
-		}
-		return settings;
-	};
-
-	PrivacyGenerator.prototype.extendCookie = function (cookieName, numDays) {
-		var settings;
-		var cookieContent = document.cookie.split('; ').find(function (val, ind) {
-			return val.startsWith(cookieName);
-		});
-		if (typeof cookieContent !== "undefined") {
-			settings = decodeURIComponent(cookieContent).split("&");
-		} else {
-			settings = [];
-		}
-		return settings;
-	};
-
-	// Generate a stable anonymous user identifier
-	PrivacyGenerator.prototype.generateUserId = function () {
-		var hex = function (buf) {
-			return Array.prototype.map.call(buf, function (x) {
-				return ('00' + x.toString(16)).slice(-2);
-			}).join('');
 		};
-		if (window.crypto && window.crypto.getRandomValues) {
-			var bytes = new Uint8Array(16);
-			window.crypto.getRandomValues(bytes);
-			// RFC4122 v4 variant
-			bytes[6] = (bytes[6] & 0x0f) | 0x40;
-			bytes[8] = (bytes[8] & 0x3f) | 0x80;
-			var h = hex(bytes);
-			return [h.substr(0, 8), h.substr(8, 4), h.substr(12, 4), h.substr(16, 4), h.substr(20, 12)].join('-');
-		}
-		// Fallback (not RFC4122, but stable enough)
-		return 'uid-' + (Date.now().toString(36)) + '-' + Math.random().toString(36).substr(2, 10);
-	};
 
-	// Read the existing user id from cookie (if present)
-	PrivacyGenerator.prototype.getUserId = function () {
-		var cookieValue = this.loadCookie(this.cookieName);
-		if (typeof cookieValue !== "undefined") {
-			var cookieSettings = this.cookieParams(cookieValue);
-			var userId = cookieSettings.find(function (val) {
-				return val.startsWith("userid=");
-			});
-			if (userId) {
-				return userId.replace("userid=", "");
+		// Category to DOM ID mapping - used throughout the code
+		PrivacyGenerator.prototype.CATEGORY_SWITCH_MAP = {
+			"strictly-necessary": "oscbr-required-cookie",
+			"analytical": "oscbr-analytical-cookie",
+			"preferences": "oscbr-preferences-cookie",
+			"marketing": "oscbr-marketing-cookie"
+		};
+
+		// All category keys for easy iteration
+		PrivacyGenerator.prototype.ALL_CATEGORIES = ["strictly-necessary", "analytical", "preferences", "marketing"];
+
+		/**
+		 * Helper to add event listener with tracking for cleanup
+		 */
+		PrivacyGenerator.prototype.addEventListener = function (element, type, handler) {
+			if (element) {
+				element.addEventListener(type, handler);
+				this.eventListeners.push({ element: element, type: type, handler: handler });
 			}
-		}
-		return undefined;
-	};
+		};
 
-	// Ensure user id is present by extending current cookie settings
-	PrivacyGenerator.prototype.ensureUserIdInCookie = function () {
-		var cookieValue = this.loadCookie(this.cookieName);
-		if (typeof cookieValue === "undefined") return;
-		var settings = this.cookieParams(cookieValue);
-		var hasUserId = settings.find(function (val) {
-			return val.startsWith("userid=");
+		/**
+		 * Cleanup method to remove all event listeners
+		 */
+		PrivacyGenerator.prototype.destroy = function () {
+			if (this.eventListeners) {
+				for (var i = 0; i < this.eventListeners.length; i++) {
+					var listener = this.eventListeners[i];
+					listener.element.removeEventListener(listener.type, listener.handler);
+				}
+				this.eventListeners = [];
+			}
+			this.log("INFO", "CMP instance destroyed and cleaned up");
+		};
+
+		/**
+		 * Initialize language selector dropdown and attach change handler
+		 */
+		PrivacyGenerator.prototype.initLanguageSelector = function () {
+			var that = this;
+			// Use cached DOM elements
+			var selectorContainer = this.domElements.langSelector;
+			var select = this.domElements.langSelect;
+
+			if (!selectorContainer || !select || !this.textsArray) return;
+
+			// Ensure ARIA label is set (in case it wasn't set yet)
+			if (!select.getAttribute("aria-label")) {
+				select.setAttribute("aria-label", "Language selector");
+			}
+
+			// Populate dropdown with available languages
+			select.innerHTML = "";
+			for (var i = 0; i < this.textsArray.length; i++) {
+				var lang = this.textsArray[i];
+				var option = document.createElement("option");
+				option.value = lang.lang;
+				option.textContent = lang.lang.toUpperCase();
+				// Add lang attribute for accessibility
+				option.setAttribute("lang", lang.lang);
+				select.appendChild(option);
+			}
+
+		// Set the current language as selected
+		if (this.currentLanguage) {
+			select.value = this.currentLanguage;
+		}
+
+		// Show the language selector and include in tab order
+		selectorContainer.style.display = "block";
+		select.setAttribute("tabindex", "0");
+
+		// Attach change handler
+		this.addEventListener(select, "change", function () {
+			that.switchLanguage(this.value);
 		});
-		if (!hasUserId) {
-			var userIdParam = "userid=" + this.generateUserId();
-			settings.push(userIdParam);
-			var newCookieVal = settings.join("&");
-			this.addCookie(this.cookieName, this.hostName, newCookieVal, 365);
-		}
-	};
+		};
 
-	PrivacyGenerator.prototype.acceptCategory = function (category) {
-		var previousCategories = this.getCategories();
-		var categories = "groups=" + category;
-		var currentDate = "datestamp=" + Date.now();
-		var currentVersion = "version=" + this.version;
-		var existingUserId = this.getUserId();
-		if (!existingUserId) {
-			existingUserId = this.generateUserId();
-		}
-		var userIdParam = "userid=" + existingUserId;
-		var cookieVal = categories + "&" + currentDate + "&" + currentVersion + "&" + userIdParam;
-		this.addCookie(this.cookieName, this.hostName, cookieVal, 365);
-		console.log("CMP cookie added");
-		console.log(cookieVal);
-		// Send hit to external server with consent change details
-		try {
-			var newCategories = category.split(":");
-			var added = newCategories.filter(function (c) { return previousCategories.indexOf(c) === -1; });
-			var removed = previousCategories.filter(function (c) { return newCategories.indexOf(c) === -1; });
-			this.sendConsentUpdate({
-				userId: existingUserId,
-				timestamp: Date.now(),
-				change: { added: added, removed: removed },
-				allConsented: newCategories,
-				version: this.version
-			});
-		} catch (e) { }
-		this.updateModalSettings(this.modal, true);
+		/**
+		 * Detect browser language and find matching language in textsArray
+		 * @returns {string|null} Language code or null if no match
+		 */
+		PrivacyGenerator.prototype.detectBrowserLanguage = function () {
+			if (!this.textsArray) return null;
 
-	};
+			var browserLang = navigator.language || navigator.userLanguage || "";
+			this.log("DEBUG", "Browser language detected as: " + browserLang);
+			browserLang = browserLang.toLowerCase();
 
-	PrivacyGenerator.prototype.getCategories = function () {
-		var cookieValue = this.loadCookie(this.cookieName);
-		if (typeof cookieValue !== "undefined") {
-			var cookieSettings = this.cookieParams(cookieValue);
-			var currentCategory = cookieSettings.find(function (val) {
-				return val.startsWith("groups=");
-			});
-			if (currentCategory) {
-				return currentCategory.replace("groups=", "").split(":");
+			// Try exact match first (e.g., "nl-NL" matches "nl-nl")
+			for (var i = 0; i < this.textsArray.length; i++) {
+				if (this.textsArray[i].lang.toLowerCase() === browserLang) {
+					this.log("DEBUG", "Exact language match found: " + this.textsArray[i].lang);
+					return this.textsArray[i].lang;
+				}
 			}
-		}
-		return this.defaultConsentedCategories;
-	};
 
-	PrivacyGenerator.prototype.updateModalSettings = function (modal, shouldClose) {
-		var close = shouldClose === true;
-		var cookieCategories = this.getCategories(); // bv ["groups=C0001:C0002", "datestamp=...", "version=..."]
-		this.sendDataLayerEvent("update");
-		if (cookieCategories) {
-			var prefSwitch = modal.querySelector("#preferences-cookie input");
-			var marketingSwitch = modal.querySelector("#marketing-cookie input");
-			if (prefSwitch) prefSwitch.checked = cookieCategories.includes("C0003");
-			if (marketingSwitch) marketingSwitch.checked = cookieCategories.includes("C0004");
-		}
-		if (close == true) {
-			window.setTimeout(function () {
-				modal.style.display = "none";
-			}, 1000)
-		}
-	};
+			// Try language prefix match (e.g., "nl-NL" matches "nl")
+			var langPrefix = browserLang.split("-")[0];
+			for (var i = 0; i < this.textsArray.length; i++) {
+				if (this.textsArray[i].lang.toLowerCase() === langPrefix) {
+					this.log("DEBUG", "Prefix language match found: " + this.textsArray[i].lang + " (from prefix: " + langPrefix + ")");
+					return this.textsArray[i].lang;
+				}
+			}
 
-	PrivacyGenerator.prototype.sendDataLayerEvent = function (type) {
-		type = type || "init";
-		var event = type === "init" ? "customCookiebarInitEvent" : "customCookiebarUpdateEvent";
-		var cookieCategories = this.getCategories();
-		window.dataLayer = window.dataLayer || [];
-		window.dataLayer.push({
-			'event': event,
-			'consentedCategories': cookieCategories.join(",")
-		})
-	};
+			this.log("DEBUG", "No language match found for browser language: " + browserLang);
+			return null;
+		};
 
-	// Public: send a hit to external server with consent update info
-	PrivacyGenerator.prototype.sendConsentUpdate = function (payload) {
-		var endpoint = 'https://example.com/consent-hit';
-		try {
-			if (!payload.version) { payload.version = this.version; }
-			payload.api_key = this.api_key;
-			var body = JSON.stringify(payload);
-			if (navigator.sendBeacon) {
-				var blob = new Blob([body], { type: 'application/json' });
-				navigator.sendBeacon(endpoint, blob);
+		/**
+		 * Get text object for a specific language
+		 * @param {string} lang - Language code
+		 * @returns {Object|null} Text object or null
+		 */
+		PrivacyGenerator.prototype.getTextsForLanguage = function (lang) {
+			if (!this.textsArray) return null;
+
+			for (var i = 0; i < this.textsArray.length; i++) {
+				if (this.textsArray[i].lang === lang) {
+					return this.textsArray[i];
+				}
+			}
+
+			return null;
+		};
+
+		/**
+		 * Switch to a different language and update UI
+		 * @param {string} lang - Language code to switch to
+		 */
+		PrivacyGenerator.prototype.switchLanguage = function (lang) {
+			this.log("INFO", "Switching language to: " + lang);
+			this.currentLanguage = lang;
+			this.texts = this.getTextsForLanguage(lang) || {};
+
+			if (!this.texts || !this.texts.header) {
+				this.log("WARN", "No texts found when switching to language: " + lang);
+			}
+
+			// Update language selector
+			if (this.domElements.langSelect) {
+				this.domElements.langSelect.value = lang;
+			}
+
+			// Re-apply texts to DOM
+			this.applyTexts();
+		};
+
+		/**
+		 * Configure category UI based on categoryConfig:
+		 * - Hide switches for required categories
+		 * - Show switches for optional categories
+		 * - Set initial state based on defaultEnabled
+		 */
+		PrivacyGenerator.prototype.configureCategoryUI = function () {
+			var that = this;
+
+			for (var catKey in this.categoryConfig) {
+				var config = this.categoryConfig[catKey];
+				var switchId = this.CATEGORY_SWITCH_MAP[catKey];
+				if (!switchId) continue;
+
+				var switchElement = document.getElementById(switchId);
+				if (switchElement) {
+					if (config.required) {
+						// Hide switch for required categories (they are always on)
+						switchElement.style.display = "none";
+					} else {
+						// Show switch and set default state for optional categories
+						switchElement.style.display = "";
+						var inputEl = switchElement.querySelector("input");
+						if (inputEl) {
+							inputEl.checked = config.defaultEnabled;
+							// Ensure ARIA attributes are set (may have been set by initializeAccessibility already)
+							if (!inputEl.getAttribute("role")) {
+								inputEl.setAttribute("role", "switch");
+							}
+							if (!inputEl.getAttribute("aria-label")) {
+								// Set a default label if not already se
+								var labels = {
+									"strictly-necessary": "Allow strictly necessary cookies",
+									"analytical": "Allow analytical cookies",
+									"preferences": "Allow preferences cookies",
+									"marketing": "Allow marketing cookies"
+								};
+								inputEl.setAttribute("aria-label", labels[catKey] || catKey);
+							}
+							inputEl.setAttribute("aria-checked", config.defaultEnabled ? "true" : "false");
+							inputEl.disabled = false;
+
+							// Add change listener to sync aria-checked
+							that.addEventListener(inputEl, "change", function () {
+								this.setAttribute("aria-checked", this.checked ? "true" : "false");
+							});
+						}
+					}
+				}
+			}
+		};
+
+		/**
+		 * Apply configured text overrides to header, intro, and category titles/bodies
+		 */
+		PrivacyGenerator.prototype.applyTexts = function () {
+			try {
+				var cfg = this.texts || {};
+				// Use cached DOM elements
+				if (cfg.header && this.domElements.headerEl) {
+					this.domElements.headerEl.textContent = cfg.header;
+				}
+				if (cfg.intro && this.domElements.introEl) {
+					this.domElements.introEl.innerHTML = cfg.intro;
+				}
+				if (cfg.buttons) {
+					if (this.domElements.acceptBtn && cfg.buttons.accept) {
+						this.domElements.acceptBtn.textContent = cfg.buttons.accept;
+					}
+					if (this.domElements.denyBtn && cfg.buttons.deny) {
+						this.domElements.denyBtn.textContent = cfg.buttons.deny;
+					}
+					if (this.domElements.saveBtn && cfg.buttons.save) {
+						this.domElements.saveBtn.textContent = cfg.buttons.save;
+					}
+				}
+				var cats = (cfg.categories) || {};
+				var applyCat = function (key) {
+					var c = cats[key] || {};
+					if (c.header) {
+						var titleEl = document.querySelector(".oscbr-accordion-title[data-category=\"" + key + "\"]");
+						if (titleEl) titleEl.textContent = c.header;
+					}
+					if (c.body) {
+						var bodyEl = document.getElementById("oscbr-body-" + key);
+						if (bodyEl) bodyEl.innerHTML = c.body;
+					}
+				};
+				var categories = ["required", "analytical", "preferences", "marketing"];
+				for (var i = 0; i < categories.length; i++) {
+					applyCat(categories[i]);
+				}
+			} catch (e) {
+				this.log("ERROR", "Failed to apply texts: " + e.message);
+			}
+		};
+
+		/**
+		 * Initialize accessibility features for the modal
+		 * Sets up ARIA attributes for modal, accordions, switches, and live regions
+		 */
+		PrivacyGenerator.prototype.initializeAccessibility = function () {
+			// Modal ARIA attributes
+			if (this.modal) {
+				this.modal.setAttribute("aria-modal", "true");
+				this.modal.setAttribute("aria-labelledby", "oscbr-cookiebar-title");
+			}
+
+			// Modal content role
+			var modalContent = this.modal ? this.modal.querySelector(".oscbr-modal-content") : null;
+			if (modalContent) {
+				modalContent.setAttribute("role", "document");
+			}
+
+			// Close button ARIA
+			var closeBtn = this.modal ? this.modal.querySelector(".oscbr-close") : null;
+			if (closeBtn) {
+				closeBtn.setAttribute("aria-label", "Close");
+			}
+
+			// Language selector ARIA
+			var langSelect = document.getElementById("oscbr-language-select");
+			if (langSelect) {
+				langSelect.setAttribute("aria-label", "Language selector");
+			}
+
+			// Live region for status announcements
+			var statusRegion = document.getElementById("oscbr-consent-status");
+			if (statusRegion) {
+				statusRegion.setAttribute("aria-live", "polite");
+				statusRegion.setAttribute("aria-atomic", "true");
+			}
+
+			// Accordion ARIA attributes
+			var accordions = [
+				{ btnId: "oscbr-accordion-required", panelId: "oscbr-panel-required", switchId: "oscbr-required-cookie", label: "Allow strictly necessary cookies" },
+				{ btnId: "oscbr-accordion-performance", panelId: "oscbr-panel-performance", switchId: "oscbr-analytical-cookie", label: "Allow analytical cookies" },
+				{ btnId: "oscbr-accordion-preferences", panelId: "oscbr-panel-preferences", switchId: "oscbr-preferences-cookie", label: "Allow preferences cookies" },
+				{ btnId: "oscbr-accordion-marketing", panelId: "oscbr-panel-marketing", switchId: "oscbr-marketing-cookie", label: "Allow marketing cookies" }
+			];
+
+			for (var i = 0; i < accordions.length; i++) {
+				var acc = accordions[i];
+				var btn = document.getElementById(acc.btnId);
+				var panel = document.getElementById(acc.panelId);
+				var switchEl = document.getElementById(acc.switchId);
+
+				// Accordion button ARIA
+				if (btn) {
+					btn.setAttribute("aria-expanded", "false");
+					btn.setAttribute("aria-controls", acc.panelId);
+				}
+
+				// Panel ARIA
+				if (panel) {
+					panel.setAttribute("role", "region");
+					panel.setAttribute("aria-labelledby", acc.btnId);
+				}
+
+				// Switch (checkbox) ARIA
+				if (switchEl) {
+					var input = switchEl.querySelector("input");
+					var slider = switchEl.querySelector(".oscbr-slider");
+
+					if (input) {
+						input.setAttribute("role", "switch");
+						input.setAttribute("aria-label", acc.label);
+						input.setAttribute("aria-checked", input.checked ? "true" : "false");
+					}
+
+					if (slider) {
+						slider.setAttribute("aria-hidden", "true");
+					}
+				}
+			}
+		};
+
+		/**
+		 * Set up focus trap for the modal to keep focus within modal boundaries
+		 * @param {HTMLElement} modal - Modal element to trap focus within
+		 */
+		PrivacyGenerator.prototype.focusTrap = function (modal) {
+			var focusableElementsString = "button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex=\"-1\"])";
+			var focusableElements = modal.querySelectorAll(focusableElementsString);
+			var firstFocusable = focusableElements[0];
+			var lastFocusable = focusableElements[focusableElements.length - 1];
+
+			modal.addEventListener("keydown", function (e) {
+				if (e.key === "Tab" || e.keyCode === 9) {
+					if (e.shiftKey) { // Shift + Tab
+						if (document.activeElement === firstFocusable) {
+							lastFocusable.focus();
+							e.preventDefault();
+						}
+					} else { // Tab
+						if (document.activeElement === lastFocusable) {
+							firstFocusable.focus();
+							e.preventDefault();
+						}
+					}
+				}
+			});
+		};
+
+		/**
+		 * Set initial focus when modal opens
+		 * @param {HTMLElement} modal - Modal elemen
+		 * @param {boolean} autoFocusEnabled - Whether auto focus is enabled
+		 * @param {boolean} prioritizeLanguageSelector - Whether to prioritize language selector for focus
+		 */
+		PrivacyGenerator.prototype.setInitialFocus = function (modal, autoFocusEnabled, prioritizeLanguageSelector) {
+			var that = this;
+			// Store currently focused element to return to later
+			this.lastFocusedElement = document.activeElement;
+
+			// Only set focus if autoFocus is enabled
+			if (!autoFocusEnabled) {
 				return;
 			}
-			if (typeof fetch === 'function') {
-				fetch(endpoint, {
-					method: 'POST',
-					headers: { 'Content-Type': 'application/json' },
-					body: body,
-					keepalive: true,
-					mode: 'no-cors',
-					credentials: 'omit'
+
+			var focusableElementsString = "button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex=\"-1\"])";
+
+			// Try to focus language selector first if it is visible and we should prioritize it
+			if (prioritizeLanguageSelector) {
+				var langSelect = this.domElements.langSelect;
+				if (langSelect && langSelect.offsetParent !== null) {
+					// Language selector is visible
+					setTimeout(function () {
+						langSelect.focus();
+					}, this.delays.initialFocus);
+					return;
+				}
+			}
+
+			// Otherwise, set focus to first focusable elemen
+			var focusableElements = modal.querySelectorAll(focusableElementsString);
+			if (focusableElements.length > 0) {
+				// Skip close button if dismissible is false, focus on first accordion instead
+				var firstElement = focusableElements[0];
+				if (firstElement && firstElement.style.display !== "none") {
+					// Use configurable delay
+					setTimeout(function () {
+						firstElement.focus();
+					}, that.delays.initialFocus);
+				}
+			}
+		};
+
+		/**
+		 * Return focus to the element that had focus before modal opened
+		 */
+		PrivacyGenerator.prototype.returnFocus = function () {
+			if (this.lastFocusedElement) {
+				this.lastFocusedElement.focus();
+			}
+		};
+
+		/**
+		 * Initialize accordion functionality for cookie categories
+		 * Sets up click handlers for accordion panels and prevents toggle when interacting with switches
+		 */
+		PrivacyGenerator.prototype.initializeAccordions = function () {
+			var that = this;
+			var accordions = this.modal.getElementsByClassName("oscbr-accordion");
+
+			var accordionClickHandler = function (event) {
+				// Check if click originated from switch/input elemen
+				var target = event.target;
+				if (target.tagName === "INPUT" || target.closest(".oscbr-switch")) {
+					// Don't toggle accordion when clicking on switch
+					return;
+				}
+
+				// Prevent multiple rapid triggers on mobile
+				event.preventDefault();
+
+				this.classList.toggle("oscbr-active");
+				var panel = this.nextElementSibling;
+				var isExpanded = this.getAttribute("aria-expanded") === "true";
+
+				// Toggle aria-expanded
+				this.setAttribute("aria-expanded", !isExpanded);
+
+				if (panel && panel.style.maxHeight) {
+					panel.style.maxHeight = null;
+				} else if (panel) {
+					panel.style.maxHeight = panel.scrollHeight + "px";
+				}
+			};
+
+			// Attach click handler to all accordion buttons
+			for (var i = 0; i < accordions.length; i++) {
+				// Use click event but prevent default to avoid double-firing on mobile
+				this.addEventListener(accordions[i], "click", accordionClickHandler);
+			}
+
+			// Prevent accordion toggle when interacting with switches
+			var switches = this.modal.querySelectorAll(".oscbr-accordion .oscbr-switch input");
+			for (var i = 0; i < switches.length; i++) {
+				this.addEventListener(switches[i], "click", function (event) {
+					event.stopPropagation();
+				});
+				this.addEventListener(switches[i], "keydown", function (event) {
+					// Space or Enter on switch should not toggle accordion
+					if (event.key === " " || event.key === "Enter" || event.keyCode === 32 || event.keyCode === 13) {
+						event.stopPropagation();
+					}
 				});
 			}
-		} catch (e) { }
-	};
+		};
 
+		/**
+		 * Read cookie value by name
+		 * @param {string} cookieName
+		 * @returns {string|undefined}
+		 */
+		PrivacyGenerator.prototype.loadCookie = function (cookieName) {
+			var encodedName = encodeURIComponent(cookieName) + "=";
+			var cookies = document.cookie.split("; ");
+			var cookieContent;
+			for (var i = 0; i < cookies.length; i++) {
+				if (cookies[i].indexOf(encodedName) === 0) {
+					cookieContent = cookies[i].substring(encodedName.length);
+					break;
+				}
+			}
+			if (typeof cookieContent !== "undefined") {
+				cookieContent = decodeURIComponent(cookieContent);
+			}
+			return cookieContent;
+		};
+
+		/** Remove cookie by setting expiry in the past */
+		PrivacyGenerator.prototype.removeCookie = function (cookieName, hostName) {
+			var cookieStr = encodeURIComponent(cookieName) + "=; path=/; domain=" + encodeURIComponent(hostName) + "; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+			document.cookie = cookieStr;
+			this.log("DEBUG", "Cookie removed: " + cookieStr);
+		};
+
+		/** Add/overwrite cookie with value and lifetime (days) */
+		PrivacyGenerator.prototype.addCookie = function (cookieName, hostName, cookieVal, exdays) {
+			var d = new Date();
+			d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+			var expires = d.toUTCString();
+			var cookieStr = encodeURIComponent(cookieName) + "=" + encodeURIComponent(cookieVal) + "; path=/; domain=" + encodeURIComponent(hostName) + "; expires=" + expires + ";";
+			document.cookie = cookieStr;
+			this.log("DEBUG", "Cookie added: " + cookieStr);
+		};
+
+		/** Extend existing cookie by N days, keep value */
+		PrivacyGenerator.prototype.refreshCookie = function (cookieName, days) {
+			var exdate = new Date();
+			var cookieContent = this.loadCookie(cookieName);
+			exdate.setDate(exdate.getDate() + days);
+			document.cookie = encodeURIComponent(cookieName)
+				+ "=" + encodeURIComponent(cookieContent)
+				+ "; path=/"
+				+ "; domain=" + encodeURIComponent(this.hostName)
+				+ (!exdate ? "" : "; expires=" + exdate.toUTCString());
+		};
+
+		/** Split cookie string into key=value parameters */
+		PrivacyGenerator.prototype.cookieParams = function (cookieVal) {
+			var settings;
+			if (typeof cookieVal !== "undefined") {
+				// cookieVal is already decoded by loadCookie, so just split i
+				settings = cookieVal.split("&");
+			} else {
+				settings = [];
+			}
+			return settings;
+		};
+
+		// Generate stable anonymous user ID
+		PrivacyGenerator.prototype.generateUserId = function () {
+			var hex = function (buf) {
+				return Array.prototype.map.call(buf, function (x) {
+					return ("00" + x.toString(16)).slice(-2);
+				}).join("");
+			};
+			if (window.crypto && window.crypto.getRandomValues) {
+				var bytes = new Uint8Array(16);
+				window.crypto.getRandomValues(bytes);
+				// RFC4122 v4 varian
+				bytes[6] = (bytes[6] & 0x0f) | 0x40;
+				bytes[8] = (bytes[8] & 0x3f) | 0x80;
+				var h = hex(bytes);
+				return [h.substr(0, 8), h.substr(8, 4), h.substr(12, 4), h.substr(16, 4), h.substr(20, 12)].join("-");
+			}
+			// Fallback (not RFC4122, but stable enough)
+			return "uid-" + (Date.now().toString(36)) + "-" + Math.random().toString(36).substr(2, 10);
+		};
+
+		// Read existing user ID from cookie (if present)
+		PrivacyGenerator.prototype.getUserId = function () {
+			var cookieValue = this.loadCookie(this.cookieName);
+			if (typeof cookieValue !== "undefined") {
+				var cookieSettings = this.cookieParams(cookieValue);
+				var userId;
+				for (var i = 0; i < cookieSettings.length; i++) {
+					if (cookieSettings[i].indexOf("userid=") === 0) {
+						userId = cookieSettings[i];
+						break;
+					}
+				}
+				if (userId) {
+					return userId.replace("userid=", "");
+				}
+			}
+			return undefined;
+		};
+
+		// Ensure user ID exists in cookie; add if missing
+		PrivacyGenerator.prototype.ensureUserIdInCookie = function () {
+			var cookieValue = this.loadCookie(this.cookieName);
+			if (typeof cookieValue === "undefined") return;
+			var settings = this.cookieParams(cookieValue);
+			var hasUserId;
+			for (var i = 0; i < settings.length; i++) {
+				if (settings[i].indexOf("userid=") === 0) {
+					hasUserId = settings[i];
+					break;
+				}
+			}
+			if (!hasUserId) {
+				var userIdParam = "userid=" + this.generateUserId();
+				settings.push(userIdParam);
+				var newCookieVal = settings.join("&");
+				this.addCookie(this.cookieName, this.hostName, newCookieVal, 365);
+			}
+		};
+
+		/**
+		 * Store consent groups in cookie and report change
+		 * @param {string} category - e.g. "strictly-necessary:analytical:preferences"
+		 */
+		PrivacyGenerator.prototype.acceptCategory = function (category) {
+			var previousCategories = this.getCategories();
+			var categories = "groups=" + category;
+			var currentDate = "datestamp=" + Date.now();
+			var currentVersion = "version=" + this.version;
+			var existingUserId = this.getUserId();
+			if (!existingUserId) {
+				existingUserId = this.generateUserId();
+			}
+			var userIdParam = "userid=" + existingUserId;
+			var cookieVal = categories + "&" + currentDate + "&" + currentVersion + "&" + userIdParam;
+			this.addCookie(this.cookieName, this.hostName, cookieVal, this.cookieLifetimeDays);
+			this.log("DEBUG", "CMP cookie updated with categories: " + cookieVal);
+			// Send hit to external server with consent change details
+			try {
+				var newCategories = category.split(":");
+				var added = [];
+				var removed = [];
+				for (var i = 0; i < newCategories.length; i++) {
+					if (previousCategories.indexOf(newCategories[i]) === -1) {
+						added.push(newCategories[i]);
+					}
+				}
+				for (var i = 0; i < previousCategories.length; i++) {
+					if (newCategories.indexOf(previousCategories[i]) === -1) {
+						removed.push(previousCategories[i]);
+					}
+				}
+				this.sendConsentUpdate({
+					userId: existingUserId,
+					timestamp: Date.now(),
+					change: { added: added, removed: removed },
+					allConsented: newCategories,
+					version: this.version
+				});
+			} catch (e) {
+				this.log("ERROR", "Failed to send consent update: " + e.message);
+			}
+			this.updateModalSettings(this.modal, true);
+
+		};
+
+		/**
+		 * Get current consent groups
+		 * @returns {string[]} array of group codes
+		 */
+		PrivacyGenerator.prototype.getCategories = function () {
+			var cookieValue = this.loadCookie(this.cookieName);
+			if (typeof cookieValue !== "undefined") {
+				var cookieSettings = this.cookieParams(cookieValue);
+				var currentCategory;
+				for (var i = 0; i < cookieSettings.length; i++) {
+					if (cookieSettings[i].indexOf("groups=") === 0) {
+						currentCategory = cookieSettings[i];
+						break;
+					}
+				}
+				if (currentCategory) {
+					var categories = currentCategory.replace("groups=", "").split(":");
+					return categories;
+				}
+			}
+			return this.defaultConsentedCategories;
+		};
+
+		/**
+		 * Sync UI switches with cookie and optionally close modal
+		 * @param {HTMLElement} modal
+		 * @param {boolean} [shouldClose]
+		 */
+		PrivacyGenerator.prototype.updateModalSettings = function (modal, shouldClose) {
+			var that = this;
+			var close = shouldClose === true;
+			var cookieCategories = this.getCategories();
+			this.sendDataLayerEvent("update");
+
+			if (cookieCategories) {
+				// Update all switches based on cookie state
+				for (var catKey in this.CATEGORY_SWITCH_MAP) {
+					var switchEl = this.categorySwitches[catKey];
+					if (switchEl) {
+						// Only set checked state if category is not required (required ones are hidden anyway)
+						if (!this.categoryConfig[catKey] || !this.categoryConfig[catKey].required) {
+							var isChecked = cookieCategories.indexOf(catKey) !== -1;
+							switchEl.checked = isChecked;
+							switchEl.setAttribute("aria-checked", isChecked ? "true" : "false");
+						}
+					}
+				}
+			}
+
+			if (close == true) {
+				// Use configurable delay
+				window.setTimeout(function () {
+					modal.style.display = "none";
+				}, that.delays.modalClose);
+			}
+		};
+
+		/**
+		 * Push init/update event to dataLayer with current categories
+		 * @param {"init"|"update"} [type]
+		 */
+		PrivacyGenerator.prototype.sendDataLayerEvent = function (type) {
+			type = type || "init";
+			var event = type === "init" ? "cookiebarConsentInit" : "cookiebarConsentUpdate";
+			var cookieCategories = this.getCategories();
+			window.dataLayer = window.dataLayer || [];
+			window.dataLayer.push({
+				"event": event,
+				"consentedCategories": cookieCategories.join(",")
+			})
+		};
+
+		// Public: send hit to external server with consent change info
+		PrivacyGenerator.prototype.sendConsentUpdate = function (payload) {
+			// Check if server updates are enabled
+			if (!this.sendToServer) {
+				this.log("DEBUG", "Server updates disabled (sendToServer=false)");
+				return;
+			}
+
+			// Validate that consentEndpoint is configured when sendToServer is true
+			if (!this.consentEndpoint || this.consentEndpoint.trim() === "") {
+				this.log("ERROR", "sendToServer is enabled but no consentEndpoint is configured. Please provide a valid consentEndpoint in the configuration.");
+				return;
+			}
+
+			if (!this.api_key) {
+				return;
+			}
+
+			var endpoint = this.consentEndpoint;
+			try {
+				if (!payload.version) { payload.version = this.version; }
+				payload.api_key = this.api_key;
+				var body = JSON.stringify(payload);
+				if (navigator.sendBeacon) {
+					var blob = new Blob([body], { type: "text/plain;charset=UTF-8" });
+					navigator.sendBeacon(endpoint, blob);
+					return;
+				}
+				if (typeof fetch === "function") {
+					fetch(endpoint, {
+						method: "POST",
+						headers: { "Content-Type": "text/plain;charset=UTF-8" },
+						body: body,
+						keepalive: true,
+						credentials: "omit"
+					});
+				}
+			} catch (e) {
+				this.log("ERROR", "Failed to send consent data to server: " + e.message);
+			}
+		};
+
+	/** Show the modal */
 	PrivacyGenerator.prototype.showModal = function () {
 		this.modal.style.display = "block";
+		// Ensure ARIA attributes are initialized (in case modal was created dynamically)
+		if (!this.modal.getAttribute("aria-modal")) {
+			this.modal.setAttribute("aria-modal", "true");
+			this.modal.setAttribute("aria-labelledby", "oscbr-cookiebar-title");
+		}
+		// Set up focus trap and initial focus when modal is shown
+		this.focusTrap(this.modal);
+		this.setInitialFocus(this.modal, this.autoFocus, this.multilingual);
+	};
+
+	/**
+	 * Close handler for close button
+	 * Closes the modal and returns focus to previously focused element
+	 */
+	PrivacyGenerator.prototype.handleCloseBtn = function () {
+		if (this.modal) {
+			this.modal.style.display = "none";
+			this.returnFocus();
+		}
+	};
+
+	/**
+	 * Close handler for background click
+	 * Closes the modal when clicking on the overlay background
+	 * @param {Event} event - Click event
+	 */
+	PrivacyGenerator.prototype.handleBackgroundClick = function (event) {
+		if (event.target === this.modal) {
+			this.modal.style.display = "none";
+			this.returnFocus();
+		}
+	};
+
+	/**
+	 * Close handler for Escape key
+	 * Closes the modal when pressing Escape key
+	 * @param {KeyboardEvent} event - Keyboard event
+	 */
+	PrivacyGenerator.prototype.handleEscapeKey = function (event) {
+		if (event.key === "Escape" || event.keyCode === 27) {
+			if (this.modal && this.modal.style.display === "block") {
+				this.modal.style.display = "none";
+				this.returnFocus();
+			}
+		}
+	};
+
+	// Expose PrivacyGenerator globally
+	window.PrivacyGenerator = PrivacyGenerator;
+})();
+
+// Initialize the CMP instance
+	// Get modal element
+	var oscbrModal = document.getElementById("oscbr");
+
+	// Create instance with configuration
+	var options = {
+		host: "",									// Domain for the consent cookie (e.g., ".example.com"); empty => current hos
+		version: "2.0.0",								// CMP version; bump to invalidate previous consen
+		modal: oscbrModal,									// Root modal element containing the cookie UI
+		apiKey: "EdIlKBQ1AiUdWR3RvZdh",										// API key included with consent update requests
+		dismissible: true,								// If true, modal can be closed; if false, user must make a choice
+		multilingual: true,								// If true, enable language selection dropdown
+		langAutoSelect: true,						// If true, automatically select language based on browser settings
+		autoFocus: true,							// If true, automatically focus modal when shown (prioritizes language selector); if false, no automatic focus
+		sendToServer: false,						// If true, consent updates are sent to server; if false, no server requests are made
+		consentEndpoint: "http://localhost:8080/consent-hit", // Full endpoint URL for consent updates; REQUIRED when sendToServer is true
+		logLevel: "INFO",							// Logging level: NONE, ERROR, WARN, INFO, DEBUG (default: INFO)
+		cookieName: "customConsent",				// Name of the cookie storing consent state
+		cookieLifetimeDays: 365,					// Cookie lifetime in days
+		refreshDays: 365,							// Days to extend cookie when validating existing cookie
+
+		// Per-category configuration: control which categories are required and which are on by defaul
+		// - required: if true, the category cannot be toggled off (switch is hidden)
+		// - defaultEnabled: if true, the category is checked by default when first shown
+		categoryConfig: {
+			"strictly-necessary": { required: true, defaultEnabled: true },   // Required, always on (switch hidden)
+			"analytical": { required: false, defaultEnabled: true },           // Required, always on (switch hidden)
+			"preferences": { required: false, defaultEnabled: false },        // Optional, off by defaul
+			"marketing": { required: false, defaultEnabled: false }           // Optional, off by defaul
+		},
+
+		// Multilingual texts: array format with language key
+		texts: [
+			{
+				lang: "nl",
+				header: "Cookie voorkeuren",
+				intro: "Deze website maakt gebruik van cookies om uw ervaring te verbeteren. U kunt hieronder uw voorkeuren aanpassen.",
+				buttons: {
+					accept: "Alle cookies accepteren",
+					deny: "Alle cookies weigeren",
+					save: "Aanpassingen opslaan"
+				},
+				categories: {
+					required: {
+						header: "Strikt noodzakelijke cookies",
+						body: "Deze cookies zijn essentieel voor het functioneren van de website en kunnen niet worden uitgeschakeld."
+					},
+					analytical: {
+						header: "Prestatie cookies",
+						body: "Met deze cookies analyseren we het gebruik van de website om de prestaties te verbeteren."
+					},
+					preferences: {
+						header: "Voorkeur cookies",
+						body: "Deze cookies onthouden uw voorkeuren, zoals taal of regio."
+					},
+					marketing: {
+						header: "Marketing cookies",
+						body: "Deze cookies worden gebruikt om u relevante advertenties te tonen op basis van uw interesses."
+					}
+				}
+			},
+			{
+				lang: "en",
+				header: "Cookie preferences",
+				intro: "This website uses <a hre='test.nl'>cookies</a> to improve your experience. You can adjust your preferences below.",
+				buttons: {
+					accept: "Accept all cookies",
+					deny: "Reject all cookies",
+					save: "Save preferences"
+				},
+				categories: {
+					required: {
+						header: "Strictly necessary cookies",
+						body: "These cookies are essential for the website to function and cannot be disabled."
+					},
+					analytical: {
+						header: "Performance cookies",
+						body: "These cookies help us analyze website usage to improve performance."
+					},
+					preferences: {
+						header: "Preference cookies",
+						body: "These cookies remember your preferences, such as language or region."
+					},
+					marketing: {
+						header: "Marketing cookies",
+						body: "These cookies are used to show you relevant advertisements based on your interests."
+					}
+				}
+			}
+		]
+	};
+
+	// Expose via OSCBR namespace to avoid global scope pollution
+	// Initialize namespace if it doesn't exist
+	window.OSCBR = window.OSCBR || {};
+
+	// Check if already initialized (useful for GTM preview mode)
+	if (window.OSCBR.initialized) {
+		console.warn("CMP: Already initialized, cleaning up previous instance");
+		if (window.OSCBR.instance && window.OSCBR.instance.destroy) {
+			window.OSCBR.instance.destroy();
+		}
 	}
 
-	var privacyGenerator = new PrivacyGenerator(window.location.hostname, "6.33.0", modal);
-	// privacyGenerator.acceptCategory("C0002");
+	// Expose modal and instance
+	window.OSCBR.modal = oscbrModal;
+	window.OSCBR.instance = new PrivacyGenerator(options);
+	window.OSCBR.version = "2.0.0";
+	window.OSCBR.initialized = true;
 
+	// Expose cleanup method for GTM preview mode
+	window.OSCBR.cleanup = function () {
+		if (window.OSCBR.instance && window.OSCBR.instance.destroy) {
+			window.OSCBR.instance.destroy();
+		}
+		window.OSCBR.initialized = false;
+	};
 </script>
-</html>
